@@ -17,7 +17,6 @@ function operationsTradeWallet(actualOffers, wallet, walletTrade, asset){ // esl
   const assetTrade = new Stellar.Asset(walletTrade.asset_code, walletTrade.asset_issuer);
   const prevSameOffers = filterOffers(actualOffers, asset, assetTrade);
   const bnNewOfferAmount = new Decimal(wallet.balance);
-
   const ops = [];
 
   if(prevSameOffers.length > 0){
@@ -89,9 +88,7 @@ function updateOffers(wallets, actualOffers){
   return walletsWithoutNative.reduce( (accWallet, wallet) => {
 
     const asset = new Stellar.Asset(wallet.asset_code, wallet.asset_issuer);
-
     const walletsTrade = walletsWithoutNative.filter(otherWallet => otherWallet !== wallet);
-
     const updateOrCreateOps = walletsTrade.reduce( (accWalletTrade, walletTrade) => accWalletTrade.concat(operationsTradeWallet(actualOffers, wallet, walletTrade, asset) ), []); // eslint-disable-line max-len
 
     return accWallet.concat(updateOrCreateOps);

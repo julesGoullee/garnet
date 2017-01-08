@@ -529,7 +529,7 @@ describe('updateOffers', () => {
             self: { href: 'https://horizon-testnet.stellar.org/offers/2' },
             offer_maker: { href: 'https://horizon-testnet.stellar.org/accounts/BOT_ACCOUNT_ID' }
           },
-          id: 1,
+          id: 2,
           paging_token: '1',
           seller: 'BOT_ACCOUNT_ID',
           selling: {
@@ -542,7 +542,7 @@ describe('updateOffers', () => {
             asset_code: 'AS1',
             asset_issuer: 'AS1_ISSUER'
           },
-          amount: '0.0000000',
+          amount: '10.0000000',
           price_r: {
             n: 1,
             d: 1
@@ -563,6 +563,19 @@ describe('updateOffers', () => {
           selling: {
             code: 'AS1',
             issuer: 'AS1_ISSUER'
+          }
+        },
+        {
+          amount: '0.0000000',
+          buying: {
+            code: 'AS1',
+            issuer: 'AS1_ISSUER'
+          },
+          offerId: 2,
+          price: '1',
+          selling: {
+            code: 'AS2',
+            issuer: 'AS2_ISSUER'
           }
         }
       ];
