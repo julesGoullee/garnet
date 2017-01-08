@@ -11,6 +11,31 @@ const mock = require('mock-require');
 global.chai.use(chaiAsPromised);
 global.chai.use(spy);
 
+function MockStellarAsset(code, issuer){
+
+  this.code = code;
+  this.issuer = issuer;
+
+}
+
+MockStellarAsset.prototype.isNative = function isNative(){
+
+  return typeof this.issuer !== 'string';
+
+};
+
+MockStellarAsset.prototype.equals = function equals(assetCompare){
+
+  return (assetCompare.isNative() && this.isNative() ) || (this.code === assetCompare.code && this.issuer === assetCompare.issuer);
+
+};
+
+MockStellarAsset.native = function native(){
+
+  return new MockStellarAsset(null, null);
+
+};
+
 mock('stellar-sdk', {
   Operation: {
     manageOffer: offerData => offerData,
@@ -23,13 +48,6 @@ mock('stellar-sdk', {
     }
   },
   Server: function MockStellarServer(){},
-  Asset: function MockStellarAsset(code, issuer){
-
-    this.code = code;
-    this.issuer = issuer;
-    
-    return this;
-
-  }
+  Asset: MockStellarAsset
 });
 

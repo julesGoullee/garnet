@@ -3,10 +3,11 @@ const Stellar = require('stellar-sdk');
 const { HORIZON_ENDPOINT } = require('../config');
 const server = new Stellar.Server(HORIZON_ENDPOINT);
 const { getTransactionUrl } = require('./transaction');
+const { showAssetCode } = require('../modules/wallet');
 
 module.exports = async function payment(sellerAccount, sellerPair, buyPair, amount, asset){ // eslint-disable-line max-params
 
-  log.info('payment', `sellerPair:${sellerPair.accountId()}|asset:${asset.code}|Amount:${amount}|BuyPair:${buyPair.accountId()}`);
+  log.info('payment', `Seller:${sellerPair.accountId()}|asset:${showAssetCode(asset)}|Amount:${amount}|BuyPair:${buyPair.accountId()}`);
 
   const paymentOp = Stellar.Operation.payment({
     destination: buyPair.accountId(),

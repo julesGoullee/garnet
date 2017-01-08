@@ -1,6 +1,7 @@
 /* eslint max-nested-callbacks:[2, 5], array-callback-return: 0, camelcase: 0 */
 
 const { updateOffers } = require('../../bot/trade');
+const { assetInstance } = require('../../modules/utils');
 
 describe('updateOffers', () => {
 
@@ -22,7 +23,10 @@ describe('updateOffers', () => {
             limit: '100000',
             asset_type: 'credit_alphanum4',
             asset_code: 'AS1',
-            asset_issuer: 'AS1_ISSUER'
+            asset_issuer: 'AS1_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+            })
           }
         ];
 
@@ -38,14 +42,20 @@ describe('updateOffers', () => {
             limit: '100000',
             asset_type: 'credit_alphanum4',
             asset_code: 'AS1',
-            asset_issuer: 'AS1_ISSUER'
+            asset_issuer: 'AS1_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+            })
           },
           {
             balance: '0.0000000',
             limit: '100000',
             asset_type: 'credit_alphanum4',
             asset_code: 'AS2',
-            asset_issuer: 'AS2_ISSUER'
+            asset_issuer: 'AS2_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+            })
           }
         ];
 
@@ -63,30 +73,34 @@ describe('updateOffers', () => {
           limit: '100000',
           asset_type: 'credit_alphanum4',
           asset_code: 'AS1',
-          asset_issuer: 'AS1_ISSUER'
+          asset_issuer: 'AS1_ISSUER',
+          asset: assetInstance({
+            asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+          })
         },
         {
           balance: '0.0000000',
           limit: '100000',
           asset_type: 'credit_alphanum4',
           asset_code: 'AS2',
-          asset_issuer: 'AS2_ISSUER'
+          asset_issuer: 'AS2_ISSUER',
+          asset: assetInstance({
+            asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+          })
         }
       ];
 
       const expectOperations = [
         {
           amount: '500.0000000',
-          buying: {
-            code: 'AS2',
-            issuer: 'AS2_ISSUER'
-          },
+          buying: assetInstance({
+            asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+          }),
           offerId: 0,
           price: '1',
-          selling: {
-            code: 'AS1',
-            issuer: 'AS1_ISSUER'
-          }
+          selling: assetInstance({
+            asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+          })
         }
       ];
 
@@ -102,30 +116,34 @@ describe('updateOffers', () => {
           limit: '100000',
           asset_type: 'credit_alphanum4',
           asset_code: 'AS1',
-          asset_issuer: 'AS1_ISSUER'
+          asset_issuer: 'AS1_ISSUER',
+          asset: assetInstance({
+            asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+          })
         },
         {
           balance: '0.0000000',
           limit: '100000',
           asset_type: 'credit_alphanum4',
           asset_code: 'AS2',
-          asset_issuer: 'AS2_ISSUER'
+          asset_issuer: 'AS2_ISSUER',
+          asset: assetInstance({
+            asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+          })
         }
       ];
 
       const expectOperations = [
         {
           amount: '500.0000000',
-          buying: {
-            code: 'AS2',
-            issuer: 'AS2_ISSUER'
-          },
+          buying: assetInstance({
+            asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+          }),
           offerId: 0,
           price: '1',
-          selling: {
-            code: 'AS1',
-            issuer: 'AS1_ISSUER'
-          }
+          selling: assetInstance({
+            asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+          })
         }
       ];
 
@@ -141,43 +159,45 @@ describe('updateOffers', () => {
           limit: '100000',
           asset_type: 'credit_alphanum4',
           asset_code: 'AS1',
-          asset_issuer: 'AS1_ISSUER'
+          asset_issuer: 'AS1_ISSUER',
+          asset: assetInstance({
+            asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+          })
         },
         {
           balance: '500.0000000',
           limit: '100000',
           asset_type: 'credit_alphanum4',
           asset_code: 'AS2',
-          asset_issuer: 'AS2_ISSUER'
+          asset_issuer: 'AS2_ISSUER',
+          asset: assetInstance({
+            asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+          })
         }
       ];
 
       const expectOperations = [
         {
           amount: '500.0000000',
-          buying: {
-            code: 'AS2',
-            issuer: 'AS2_ISSUER'
-          },
+          buying: assetInstance({
+            asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+          }),
           offerId: 0,
           price: '1',
-          selling: {
-            code: 'AS1',
-            issuer: 'AS1_ISSUER'
-          }
+          selling: assetInstance({
+            asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+          })
         },
         {
           amount: '500.0000000',
-          buying: {
-            code: 'AS1',
-            issuer: 'AS1_ISSUER'
-          },
+          buying: assetInstance({
+            asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+          }),
           offerId: 0,
           price: '1',
-          selling: {
-            code: 'AS2',
-            issuer: 'AS2_ISSUER'
-          }
+          selling: assetInstance({
+            asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+          })
         }
       ];
 
@@ -197,14 +217,20 @@ describe('updateOffers', () => {
           limit: '100000',
           asset_type: 'credit_alphanum4',
           asset_code: 'AS1',
-          asset_issuer: 'AS1_ISSUER'
+          asset_issuer: 'AS1_ISSUER',
+          asset: assetInstance({
+            asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+          })
         },
         {
           balance: '0.0000000',
           limit: '100000',
           asset_type: 'credit_alphanum4',
           asset_code: 'AS2',
-          asset_issuer: 'AS2_ISSUER'
+          asset_issuer: 'AS2_ISSUER',
+          asset: assetInstance({
+            asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+          })
         }
       ];
 
@@ -220,12 +246,18 @@ describe('updateOffers', () => {
           selling: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS1',
-            asset_issuer: 'AS1_ISSUER'
+            asset_issuer: 'AS1_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+            })
           },
           buying: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS2',
-            asset_issuer: 'AS2_ISSUER'
+            asset_issuer: 'AS2_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+            })
           },
           amount: '500.0000000',
           price_r: {
@@ -239,16 +271,14 @@ describe('updateOffers', () => {
       const expectOperations = [
         {
           amount: '0.0000000',
-          buying: {
-            code: 'AS2',
-            issuer: 'AS2_ISSUER'
-          },
+          buying: assetInstance({
+            asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+          }),
           offerId: 1,
           price: '1',
-          selling: {
-            code: 'AS1',
-            issuer: 'AS1_ISSUER'
-          }
+          selling: assetInstance({
+            asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+          })
         }
       ];
 
@@ -264,14 +294,20 @@ describe('updateOffers', () => {
           limit: '100000',
           asset_type: 'credit_alphanum4',
           asset_code: 'AS1',
-          asset_issuer: 'AS1_ISSUER'
+          asset_issuer: 'AS1_ISSUER',
+          asset: assetInstance({
+            asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+          })
         },
         {
           balance: '0.0000000',
           limit: '100000',
           asset_type: 'credit_alphanum4',
           asset_code: 'AS2',
-          asset_issuer: 'AS2_ISSUER'
+          asset_issuer: 'AS2_ISSUER',
+          asset: assetInstance({
+            asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+          })
         }
       ];
 
@@ -287,12 +323,18 @@ describe('updateOffers', () => {
           selling: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS1',
-            asset_issuer: 'AS1_ISSUER'
+            asset_issuer: 'AS1_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+            })
           },
           buying: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS2',
-            asset_issuer: 'AS2_ISSUER'
+            asset_issuer: 'AS2_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+            })
           },
           amount: '500.0000000',
           price_r: {
@@ -315,14 +357,20 @@ describe('updateOffers', () => {
           limit: '100000',
           asset_type: 'credit_alphanum4',
           asset_code: 'AS1',
-          asset_issuer: 'AS1_ISSUER'
+          asset_issuer: 'AS1_ISSUER',
+          asset: assetInstance({
+            asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+          })
         },
         {
           balance: '0.0000000',
           limit: '100000',
           asset_type: 'credit_alphanum4',
           asset_code: 'AS2',
-          asset_issuer: 'AS2_ISSUER'
+          asset_issuer: 'AS2_ISSUER',
+          asset: assetInstance({
+            asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+          })
         }
       ];
 
@@ -338,12 +386,18 @@ describe('updateOffers', () => {
           selling: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS1',
-            asset_issuer: 'AS1_ISSUER'
+            asset_issuer: 'AS1_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+            })
           },
           buying: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS2',
-            asset_issuer: 'AS2_ISSUER'
+            asset_issuer: 'AS2_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+            })
           },
           amount: '250.0000000',
           price_r: {
@@ -357,16 +411,14 @@ describe('updateOffers', () => {
       const expectOperations = [
         {
           amount: '500.0000000',
-          buying: {
-            code: 'AS2',
-            issuer: 'AS2_ISSUER'
-          },
+          buying: assetInstance({
+            asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+          }),
           offerId: 1,
           price: '1',
-          selling: {
-            code: 'AS1',
-            issuer: 'AS1_ISSUER'
-          }
+          selling: assetInstance({
+            asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+          })
         }
       ];
 
@@ -382,14 +434,20 @@ describe('updateOffers', () => {
           limit: '100000',
           asset_type: 'credit_alphanum4',
           asset_code: 'AS1',
-          asset_issuer: 'AS1_ISSUER'
+          asset_issuer: 'AS1_ISSUER',
+          asset: assetInstance({
+            asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+          })
         },
         {
           balance: '300.0000000',
           limit: '100000',
           asset_type: 'credit_alphanum4',
           asset_code: 'AS2',
-          asset_issuer: 'AS2_ISSUER'
+          asset_issuer: 'AS2_ISSUER',
+          asset: assetInstance({
+            asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+          })
         }
       ];
 
@@ -405,12 +463,18 @@ describe('updateOffers', () => {
           selling: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS1',
-            asset_issuer: 'AS1_ISSUER'
+            asset_issuer: 'AS1_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+            })
           },
           buying: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS2',
-            asset_issuer: 'AS2_ISSUER'
+            asset_issuer: 'AS2_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+            })
           },
           amount: '250.0000000',
           price_r: {
@@ -430,12 +494,18 @@ describe('updateOffers', () => {
           selling: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS2',
-            asset_issuer: 'AS2_ISSUER'
+            asset_issuer: 'AS2_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+            })
           },
           buying: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS1',
-            asset_issuer: 'AS1_ISSUER'
+            asset_issuer: 'AS1_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+            })
           },
           amount: '250.0000000',
           price_r: {
@@ -449,29 +519,25 @@ describe('updateOffers', () => {
       const expectOperations = [
         {
           amount: '700.0000000',
-          buying: {
-            code: 'AS2',
-            issuer: 'AS2_ISSUER'
-          },
+          buying: assetInstance({
+            asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+          }),
           offerId: 1,
           price: '1',
-          selling: {
-            code: 'AS1',
-            issuer: 'AS1_ISSUER'
-          }
+          selling: assetInstance({
+            asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+          })
         },
         {
           amount: '300.0000000',
-          buying: {
-            code: 'AS1',
-            issuer: 'AS1_ISSUER'
-          },
+          buying: assetInstance({
+            asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+          }),
           offerId: 1,
           price: '1',
-          selling: {
-            code: 'AS2',
-            issuer: 'AS2_ISSUER'
-          }
+          selling: assetInstance({
+            asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+          })
         }
       ];
 
@@ -487,14 +553,20 @@ describe('updateOffers', () => {
           limit: '100000',
           asset_type: 'credit_alphanum4',
           asset_code: 'AS1',
-          asset_issuer: 'AS1_ISSUER'
+          asset_issuer: 'AS1_ISSUER',
+          asset: assetInstance({
+            asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+          })
         },
         {
           balance: '0.0000000',
           limit: '100000',
           asset_type: 'credit_alphanum4',
           asset_code: 'AS2',
-          asset_issuer: 'AS2_ISSUER'
+          asset_issuer: 'AS2_ISSUER',
+          asset: assetInstance({
+            asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+          })
         }
       ];
 
@@ -510,12 +582,18 @@ describe('updateOffers', () => {
           selling: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS1',
-            asset_issuer: 'AS1_ISSUER'
+            asset_issuer: 'AS1_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+            })
           },
           buying: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS2',
-            asset_issuer: 'AS2_ISSUER'
+            asset_issuer: 'AS2_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+            })
           },
           amount: '250.0000000',
           price_r: {
@@ -535,12 +613,18 @@ describe('updateOffers', () => {
           selling: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS2',
-            asset_issuer: 'AS2_ISSUER'
+            asset_issuer: 'AS2_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+            })
           },
           buying: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS1',
-            asset_issuer: 'AS1_ISSUER'
+            asset_issuer: 'AS1_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+            })
           },
           amount: '10.0000000',
           price_r: {
@@ -554,30 +638,85 @@ describe('updateOffers', () => {
       const expectOperations = [
         {
           amount: '1000.0000000',
-          buying: {
-            code: 'AS2',
-            issuer: 'AS2_ISSUER'
-          },
+          buying: assetInstance({
+            asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+          }),
           offerId: 1,
           price: '1',
-          selling: {
-            code: 'AS1',
-            issuer: 'AS1_ISSUER'
-          }
+          selling: assetInstance({
+            asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+          })
         },
         {
           amount: '0.0000000',
-          buying: {
-            code: 'AS1',
-            issuer: 'AS1_ISSUER'
-          },
+          buying: assetInstance({
+            asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+          }),
           offerId: 2,
           price: '1',
-          selling: {
-            code: 'AS2',
-            issuer: 'AS2_ISSUER'
-          }
+          selling: assetInstance({
+            asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+          })
         }
+      ];
+
+      expect(updateOffers(wallets, offers) ).to.deep.equals(expectOperations);
+
+    });
+
+    it('Should not update native on balance change', () => {
+
+      const wallets = [
+        {
+          balance: '1000.0000000',
+          limit: '100000',
+          asset_type: 'native',
+          asset: assetInstance({ asset_type: 'native' })
+        },
+        {
+          balance: '0.0000000',
+          limit: '100000',
+          asset_type: 'credit_alphanum4',
+          asset_code: 'AS1',
+          asset_issuer: 'AS1_ISSUER',
+          asset: assetInstance({
+            asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+          })
+        }
+      ];
+
+      const offers = [
+        {
+          _links: {
+            self: { href: 'https://horizon-testnet.stellar.org/offers/1' },
+            offer_maker: { href: 'https://horizon-testnet.stellar.org/accounts/BOT_ACCOUNT_ID' }
+          },
+          id: 1,
+          paging_token: '1',
+          seller: 'BOT_ACCOUNT_ID',
+          selling: {
+            asset_type: 'native',
+            asset: assetInstance({ asset_type: 'native' })
+          },
+          buying: {
+            asset_type: 'credit_alphanum4',
+            asset_code: 'AS1',
+            asset_issuer: 'AS1_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+            })
+          },
+          amount: '1001.0000000',
+          price_r: {
+            n: 1,
+            d: 1
+          },
+          price: '1.0000000'
+        }
+      ];
+
+      const expectOperations = [
+
       ];
 
       expect(updateOffers(wallets, offers) ).to.deep.equals(expectOperations);

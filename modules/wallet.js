@@ -1,15 +1,28 @@
 const log = require('npmlog');
 const Decimal = require('decimal.js');
 
+function showAssetCode(asset){
+
+  return asset.isNative() ? 'XLM_NATIVE' : `${asset.code} - ${asset.issuer}`;
+
+}
+
+
+function showWallets(account){
+
+  return account.balances.map(wallet => `${showAssetCode(wallet.asset)}|Balance:${wallet.balance}`); // eslint-disable-line no-confusing-arrow, max-len
+
+}
+
 function getUpWallets(wallets){
 
   return wallets.reduce( (acc, wallet) => {
 
     const bnBalance = new Decimal(wallet.balance);
 
-    if(bnBalance.isPositive() && !bnBalance.isZero() && wallet.asset_type !== 'native'){
+    if(bnBalance.isPositive() && !bnBalance.isZero() ){
 
-      log.info('upWallet', `${wallet.asset_code} - ${wallet.asset_issuer}|Balance:${wallet.balance}`);
+      log.info('upWallet', `${showAssetCode(wallet.asset)}|Balance:${wallet.balance}`);
       acc.push(wallet);
 
     }
@@ -20,13 +33,8 @@ function getUpWallets(wallets){
 
 }
 
-function showWallets(account){
-
-  return account.balances.map(wallet => wallet.asset_code ? `${wallet.asset_code} - ${wallet.balance} ` : `XLM:${wallet.balance} `); // eslint-disable-line no-confusing-arrow, max-len
-
-}
-
 module.exports = {
-  getUpWallets,
-  showWallets
+  showAssetCode,
+  showWallets,
+  getUpWallets
 };

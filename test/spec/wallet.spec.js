@@ -1,6 +1,7 @@
 /* eslint max-nested-callbacks:[2, 5], array-callback-return: 0, camelcase: 0 */
 
 const { getUpWallets, showWallets } = require('../../modules/wallet');
+const { assetInstance } = require('../../modules/utils');
 
 describe('Wallet', () => {
 
@@ -20,14 +21,20 @@ describe('Wallet', () => {
           limit: '10000',
           asset_type: 'credit_alphanum4',
           asset_code: 'AS1',
-          asset_issuer: 'AS1_ISSUER'
+          asset_issuer: 'AS1_ISSUER',
+          asset: assetInstance({
+            asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+          })
         },
         {
           balance: '0.0000000',
           limit: '10000',
           asset_type: 'credit_alphanum4',
           asset_code: 'AS2',
-          asset_issuer: 'AS2_ISSUER'
+          asset_issuer: 'AS2_ISSUER',
+          asset: assetInstance({
+            asset_type: 'AS2', asset_issuer: 'AS2_ISSUER'
+          })
         }
       ];
 
@@ -35,7 +42,7 @@ describe('Wallet', () => {
 
     });
 
-    it('Should not return native type wallet', () => {
+    it('Should return native type wallet', () => {
 
       const wallets = [
         {
@@ -43,22 +50,29 @@ describe('Wallet', () => {
           limit: '10000',
           asset_type: 'credit_alphanum4',
           asset_code: 'AS1',
-          asset_issuer: 'AS1_ISSUER'
+          asset_issuer: 'AS1_ISSUER',
+          asset: assetInstance({
+            asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+          })
         },
         {
           balance: '1.0000000',
           limit: '10000',
           asset_type: 'credit_alphanum4',
           asset_code: 'AS2',
-          asset_issuer: 'AS2_ISSUER'
+          asset_issuer: 'AS2_ISSUER',
+          asset: assetInstance({
+            asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+          })
         },
         {
           balance: '10.0000000',
-          asset_type: 'native'
+          asset_type: 'native',
+          asset: assetInstance({ asset_type: 'native' })
         }
       ];
 
-      expect(getUpWallets(wallets) ).to.deep.equals([wallets[0], wallets[1]]);
+      expect(getUpWallets(wallets) ).to.deep.equals([wallets[0], wallets[1], wallets[2]]);
 
     });
 
@@ -74,20 +88,26 @@ describe('Wallet', () => {
           limit: '10000',
           asset_type: 'credit_alphanum4',
           asset_code: 'AS1',
-          asset_issuer: 'AS1_ISSUER'
+          asset_issuer: 'AS1_ISSUER',
+          asset: assetInstance({
+            asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+          })
         },
         {
           balance: '1.0000000',
           limit: '10000',
           asset_type: 'credit_alphanum4',
           asset_code: 'AS2',
-          asset_issuer: 'AS2_ISSUER'
+          asset_issuer: 'AS2_ISSUER',
+          asset: assetInstance({
+            asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+          })
         }
       ]};
 
       expect(showWallets(account) ).to.deep.equals([
-        'AS1 - 944.0000000 ',
-        'AS2 - 1.0000000 '
+        'AS1 - AS1_ISSUER|Balance:944.0000000',
+        'AS2 - AS2_ISSUER|Balance:1.0000000'
       ]);
 
     });
@@ -100,25 +120,32 @@ describe('Wallet', () => {
           limit: '10000',
           asset_type: 'credit_alphanum4',
           asset_code: 'AS1',
-          asset_issuer: 'AS1_ISSUER'
+          asset_issuer: 'AS1_ISSUER',
+          asset: assetInstance({
+            asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+          })
         },
         {
           balance: '1.0000000',
           limit: '10000',
           asset_type: 'credit_alphanum4',
           asset_code: 'AS2',
-          asset_issuer: 'AS2_ISSUER'
+          asset_issuer: 'AS2_ISSUER',
+          asset: assetInstance({
+            asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+          })
         },
         {
           balance: '10.0000000',
-          asset_type: 'native'
+          asset_type: 'native',
+          asset: assetInstance({ asset_type: 'native' })
         }
       ]};
 
       expect(showWallets(account) ).to.deep.equals([
-        'AS1 - 944.0000000 ',
-        'AS2 - 1.0000000 ',
-        'XLM:10.0000000 '
+        'AS1 - AS1_ISSUER|Balance:944.0000000',
+        'AS2 - AS2_ISSUER|Balance:1.0000000',
+        'XLM_NATIVE|Balance:10.0000000'
       ]);
 
     });

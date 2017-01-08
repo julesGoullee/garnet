@@ -2,6 +2,7 @@
 
 const Stellar = require('stellar-sdk');
 const filterOffers = require('../../modules/filterOffers');
+const { assetInstance } = require('../../modules/utils');
 
 describe('filterOffers', () => {
 
@@ -24,12 +25,18 @@ describe('filterOffers', () => {
           selling: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS1',
-            asset_issuer: 'AS1_ISSUER'
+            asset_issuer: 'AS1_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+            })
           },
           buying: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS2',
-            asset_issuer: 'AS2_ISSUER'
+            asset_issuer: 'AS2_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+            })
           },
           amount: '250.0000000',
           price_r: {
@@ -61,12 +68,18 @@ describe('filterOffers', () => {
           selling: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS1',
-            asset_issuer: 'AS1_ISSUERFAKE'
+            asset_issuer: 'AS1_ISSUERFAKE',
+            asset: assetInstance({
+              asset_code: 'AS1', asset_issuer: 'AS1_ISSUERFAKE'
+            })
           },
           buying: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS2',
-            asset_issuer: 'AS2_ISSUER'
+            asset_issuer: 'AS2_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+            })
           },
           amount: '250.0000000',
           price_r: {
@@ -98,12 +111,18 @@ describe('filterOffers', () => {
           selling: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS1',
-            asset_issuer: 'AS1_ISSUER'
+            asset_issuer: 'AS1_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+            })
           },
           buying: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS2FAKE',
-            asset_issuer: 'AS2_ISSUER'
+            asset_issuer: 'AS2_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS2FAKE', asset_issuer: 'AS2_ISSUER'
+            })
           },
           amount: '250.0000000',
           price_r: {
@@ -135,12 +154,18 @@ describe('filterOffers', () => {
           selling: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS1',
-            asset_issuer: 'AS1_ISSUER'
+            asset_issuer: 'AS1_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+            })
           },
           buying: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS2',
-            asset_issuer: 'AS2_ISSUERFake'
+            asset_issuer: 'AS2_ISSUERFake',
+            asset: assetInstance({
+              asset_code: 'AS2', asset_issuer: 'AS2_ISSUERFake'
+            })
           },
           amount: '250.0000000',
           price_r: {
@@ -172,12 +197,18 @@ describe('filterOffers', () => {
           selling: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS1',
-            asset_issuer: 'AS1_ISSUER'
+            asset_issuer: 'AS1_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+            })
           },
           buying: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS2',
-            asset_issuer: 'AS2_ISSUERFake'
+            asset_issuer: 'AS2_ISSUERFake',
+            asset: assetInstance({
+              asset_code: 'AS2', asset_issuer: 'AS2_ISSUERFake'
+            })
           },
           amount: '250.0000000',
           price_r: {
@@ -197,12 +228,18 @@ describe('filterOffers', () => {
           selling: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS2',
-            asset_issuer: 'AS2_ISSUER'
+            asset_issuer: 'AS2_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+            })
           },
           buying: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS1',
-            asset_issuer: 'AS1_ISSUER'
+            asset_issuer: 'AS1_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+            })
           },
           amount: '0.0000000',
           price_r: {
@@ -238,12 +275,18 @@ describe('filterOffers', () => {
           selling: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS1',
-            asset_issuer: 'AS1_ISSUER'
+            asset_issuer: 'AS1_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+            })
           },
           buying: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS2',
-            asset_issuer: 'AS2_ISSUER'
+            asset_issuer: 'AS2_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+            })
           },
           amount: '250.0000000',
           price_r: {
@@ -263,12 +306,18 @@ describe('filterOffers', () => {
           selling: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS1',
-            asset_issuer: 'AS1_ISSUER'
+            asset_issuer: 'AS1_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+            })
           },
           buying: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS2',
-            asset_issuer: 'AS2_ISSUER'
+            asset_issuer: 'AS2_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+            })
           },
           amount: '255.0000000',
           price_r: {
@@ -300,12 +349,18 @@ describe('filterOffers', () => {
           selling: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS1',
-            asset_issuer: 'AS1_ISSUER'
+            asset_issuer: 'AS1_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+            })
           },
           buying: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS2',
-            asset_issuer: 'AS2_ISSUER'
+            asset_issuer: 'AS2_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+            })
           },
           amount: '250.0000000',
           price_r: {
@@ -325,12 +380,18 @@ describe('filterOffers', () => {
           selling: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS1',
-            asset_issuer: 'AS1_ISSUER'
+            asset_issuer: 'AS1_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+            })
           },
           buying: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS2',
-            asset_issuer: 'AS2_ISSUER'
+            asset_issuer: 'AS2_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+            })
           },
           amount: '255.0000000',
           price_r: {
@@ -350,12 +411,18 @@ describe('filterOffers', () => {
           selling: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS2',
-            asset_issuer: 'AS2_ISSUER'
+            asset_issuer: 'AS2_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
+            })
           },
           buying: {
             asset_type: 'credit_alphanum4',
             asset_code: 'AS1',
-            asset_issuer: 'AS1_ISSUER'
+            asset_issuer: 'AS1_ISSUER',
+            asset: assetInstance({
+              asset_code: 'AS1', asset_issuer: 'AS1_ISSUER'
+            })
           },
           amount: '255.0000000',
           price_r: {
