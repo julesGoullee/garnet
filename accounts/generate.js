@@ -24,13 +24,13 @@ async function generatePair(){
 
 }
 
-async function genIssuer(assetName){
+async function genIssuer(assetCode){
 
   const pair = await generatePair();
   const account = await server.loadAccount(pair.accountId() );
-  const asset = new StellarSdk.Asset(assetName, pair.accountId() );
+  const asset = new StellarSdk.Asset(assetCode, pair.accountId() );
 
-  log.info('genIssuer', `issuerAccount:${pair.accountId()}|asset:${assetName}`);
+  log.info('genIssuer', `issuerAccount:${pair.accountId()}|asset:${assetCode}`);
 
   return {
     pair,

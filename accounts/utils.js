@@ -4,13 +4,31 @@ const { HORIZON_ENDPOINT } = require('../config');
 
 const server = new StellarSdk.Server(HORIZON_ENDPOINT);
 
-function showBalance(account){
+function sleep(time){
 
-  return account.balances.map(wallet => wallet.asset_code ? `${wallet.asset_code} - ${wallet.balance} ` : ` XLM:${wallet.balance} `);
+  return new Promise(resolve => setTimeout(resolve, time) );
 
 }
 
-async function payment(sellerAccount, sellerPair, buyPair, amount, asset){
+function showBalance(account){
+
+  return account.balances.map(wallet => wallet.asset_code ? `${wallet.asset_code} - ${wallet.balance} ` : ` XLM:${wallet.balance} `); // eslint-disable-line no-confusing-arrow, max-len
+
+}
+
+function bulkOperations(transactionBuilder, operations){
+
+  operations.forEach(operation => transactionBuilder.addOperation(operation) );
+
+}
+
+function getTransactionUrl(transactionRes){
+
+  return transactionRes._links.transaction.href; // eslint-disable-line no-underscore-dangle
+
+}
+
+async function payment(sellerAccount, sellerPair, buyPair, amount, asset){ // eslint-disable-line max-params
 
   log.info('payment', `sellerPair:${sellerPair.accountId()}|asset:${asset.code}|Amount:${amount}|BuyPair:${buyPair.accountId()}`);
 
@@ -26,13 +44,24 @@ async function payment(sellerAccount, sellerPair, buyPair, amount, asset){
 
   const transactionRes = await server.submitTransaction(transaction);
 
-  log.info('payment', `transactionPayment|Url:${transactionRes._links.transaction.href}`);
+  log.info('payment', `transactionPayment|Url:${getTransactionUrl(transactionRes)}`);
 
 }
 
-function bulkOperations(transaction, operations){
+function deleteOfferOp(offer){
 
-  operations.forEach(operation => transaction.addOperation(operation) );
+  const assetSelling = new StellarSdk.Asset(offer.selling.asset_code, offer.selling.asset_issuer);
+  const assetBuying = new StellarSdk.Asset(offer.buying.asset_code, offer.buying.asset_issuer);
+
+  log.info('offer', `Delete|assetSelling:${assetSelling.code}-${assetSelling.issuer}|assetBuying:${assetBuying.code}-${assetBuying.issuer}|LastAmount:${offer.amount}`); // eslint-disable-line max-len
+
+  return StellarSdk.Operation.manageOffer({
+    selling: assetSelling,
+    buying: assetBuying,
+    amount: '0',
+    price: '1',
+    offerId: offer.id
+  });
 
 }
 
@@ -49,12 +78,16 @@ async function trustAssets(trusterAccount, trusterPair, assets){
 
   const transactionRes = await server.submitTransaction(transaction);
 
-  log.info('trustAssets', `Url:${transactionRes._links.transaction.href}`);
+  log.info('trustAssets', `Url:${getTransactionUrl(transactionRes)}`); // eslint-disable-line no-underscore-dangle
 
 }
 
 module.exports = {
+  sleep,
   showBalance,
+  bulkOperations,
+  getTransactionUrl,
   payment,
+  deleteOfferOp,
   trustAssets
 };

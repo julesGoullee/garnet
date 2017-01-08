@@ -18,6 +18,7 @@
     "chai-as-promised": "6.0.0",
     "chai-spies": "0.7.1",
     "cors": "2.8.1",
+    "decimal.js": "^7.1.0",
     "eslint": "3.10.2",
     "eslint-plugin-babel": "4.0.0",
     "eslint-plugin-no-async-without-await": "1.2.0",
