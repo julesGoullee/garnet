@@ -4,26 +4,81 @@ const Stellar = require('stellar-sdk');
 const { HORIZON_ENDPOINT, BOT_CHECK_BALANCE_TIMER } = require('../config');
 const { sleep } = require('../modules/utils');
 const server = new Stellar.Server(HORIZON_ENDPOINT);
-const dataAccounts = require('../data/accounts.json');
 const { getUpWallets, showWallets } = require('../modules/wallet');
 const fetchOffers = require('../modules/fetcherOffers');
 const deleteOfferOp = require('../modules/deleteOfferOperation');
 const { submitTransaction } = require('../modules/transaction');
+const filterOffers = require('../modules/filterOffers');
 
 const startTime = Date.now();
 
-function filterOffers(offers, assetSelling, assetBuying){
+function operationsTradeWallet(actualOffers, wallet, walletTrade, asset){ // eslint-disable-line max-statements
 
-  return offers.filter(offer => assetSelling.issuer === offer.selling.asset_issuer &&
-  assetSelling.code === offer.selling.asset_code &&
-  assetBuying.issuer === offer.buying.asset_issuer &&
-  assetBuying.code === offer.buying.asset_code);
+  const assetTrade = new Stellar.Asset(walletTrade.asset_code, walletTrade.asset_issuer);
+  const prevSameOffers = filterOffers(actualOffers, asset, assetTrade);
+  const bnNewOfferAmount = new Decimal(wallet.balance);
+
+  const ops = [];
+
+  if(prevSameOffers.length > 0){
+
+    const lastOffer = prevSameOffers[0];
+
+    if(prevSameOffers.length > 1){
+
+      const lastOffersCurrentToRemove = [...prevSameOffers].splice(1, prevSameOffers.length);
+
+      lastOffersCurrentToRemove.forEach(lastOfferCurrentToRemove => ops.push(deleteOfferOp(lastOfferCurrentToRemove) ) );
+
+    }
+
+    const bnLastOfferAmount = new Decimal(lastOffer.amount);
+
+    if(bnLastOfferAmount.equals(bnNewOfferAmount) ){
+
+      log.info('offer', `NothingChangeOffer|Selling:${asset.code}-${asset.issuer}|Buying:${lastOffer.buying.asset_code}-${lastOffer.buying.asset_issuer}|Balance:${wallet.balance}`); // eslint-disable-line max-len
+
+    } else{
+
+      log.info('offer', `UpdateOffer|Selling:${asset.code}-${asset.issuer}|Buying:${lastOffer.buying.asset_code}-${lastOffer.buying.asset_issuer}|Score:${wallet.balance - lastOffer.amount}`); // eslint-disable-line max-len
+
+      ops.push(Stellar.Operation.manageOffer({
+        selling: asset,
+        buying: assetTrade,
+        amount: wallet.balance,
+        price: '1',
+        offerId: lastOffer.id
+      }) );
+
+    }
+
+  } else if(bnNewOfferAmount.isPositive() && !bnNewOfferAmount.isZero() && wallet.asset_type !== 'native'){
+
+    log.info('offer', `NewOffer|Selling:${asset.code}-${asset.issuer}|Buying:${assetTrade.code}-${assetTrade.issuer}|Balance:${wallet.balance}`); // eslint-disable-line max-len
+
+    ops.push(Stellar.Operation.createPassiveOffer({
+      selling: asset,
+      buying: assetTrade,
+      amount: wallet.balance,
+      price: '1',
+      offerId: 0
+    }) );
+
+  } else{
+
+    log.info('offer', `TrustNewAsset:${asset.code}-${asset.issuer}|Balance:${wallet.balance}`);
+
+  }
+
+  return ops;
 
 }
 
-function updateOffers(upWallets, actualOffers){
+function updateOffers(wallets, actualOffers){
 
-  if(upWallets.length === 0){
+  const walletsWithoutNative = wallets.filter(otherWallet => otherWallet.asset_type !== 'native');
+
+  if(walletsWithoutNative.length === 0){
 
     log.info('updateOffers', `No upWallet|DeleteActualOffers:${actualOffers.length}`);
 
@@ -31,76 +86,17 @@ function updateOffers(upWallets, actualOffers){
 
   }
 
-  let ops = upWallets.reduce( (acc, upWallet) => {
+  return walletsWithoutNative.reduce( (accWallet, wallet) => {
 
-    const asset = new Stellar.Asset(upWallet.asset_code, upWallet.asset_issuer);
-    const othersAssetsData = dataAccounts.issuers.filter(issuer => issuer.account.accountId !== asset.issuer || issuer.asset !== asset.code);
+    const asset = new Stellar.Asset(wallet.asset_code, wallet.asset_issuer);
 
-    return acc.concat(othersAssetsData.reduce( (acc, otherAssetData) => {
+    const walletsTrade = walletsWithoutNative.filter(otherWallet => otherWallet !== wallet);
 
-      const otherAsset = new Stellar.Asset(otherAssetData.asset, otherAssetData.account.accountId);
-      const lastOffers = filterOffers(actualOffers, asset, otherAsset);
+    const updateOrCreateOps = walletsTrade.reduce( (accWalletTrade, walletTrade) => accWalletTrade.concat(operationsTradeWallet(actualOffers, wallet, walletTrade, asset) ), []); // eslint-disable-line max-len
 
-      if(lastOffers.length > 0){
-
-        const lastOffer = lastOffers[0];
-
-        if(lastOffers.length > 1){
-
-          const lastOffersCurrentToRemove = [...lastOffers].splice(1, lastOffers.length);
-
-          acc.concat(lastOffersCurrentToRemove.map(deleteOfferOp) );
-
-        }
-
-        actualOffers = actualOffers.filter(actualOffer => lastOffers.find(findLastOffer => findLastOffer.id !== actualOffer.id) );
-
-        const bnLastOfferAmount = new Decimal(lastOffer.amount);
-        const bnNewOfferAmount = new Decimal(upWallet.balance);
-
-        if(bnLastOfferAmount.equals(bnNewOfferAmount) ){
-
-          log.info('offer', `NothingChangeOffer|Selling:${asset.code}-${asset.issuer}|Buying:${lastOffer.buying.asset_code}-${lastOffer.buying.asset_issuer}|Balance:${upWallet.balance}`); // eslint-disable-line max-len
-
-        } else{
-
-          log.info('offer', `UpdateOffer|Selling:${asset.code}-${asset.issuer}|Buying:${lastOffer.buying.asset_code}-${lastOffer.buying.asset_issuer}|Score:${upWallet.balance - lastOffer.amount}`); // eslint-disable-line max-len
-
-          return acc.concat(Stellar.Operation.manageOffer({
-            selling: asset,
-            buying: otherAsset,
-            amount: upWallet.balance,
-            price: '1',
-            offerId: lastOffer.id
-          }) );
-
-        }
-
-        return acc;
-
-      }
-
-      log.info('offer', `NewOffer|Selling:${asset.code}-${asset.issuer}|Buying:${otherAsset.code}-${otherAsset.issuer}|Balance:${upWallet.balance}`); // eslint-disable-line max-len
-
-      return acc.concat(Stellar.Operation.createPassiveOffer({
-        selling: asset,
-        buying: otherAsset,
-        amount: upWallet.balance,
-        price: '1',
-        offerId: 0
-      }) );
-
-    }, []) );
+    return accWallet.concat(updateOrCreateOps);
 
   }, []);
-
-  if(actualOffers.length > 0){
-
-    ops = ops.concat(actualOffers.map(deleteOfferOp) );
-
-  }
-
-  return ops;
 
 }
 
@@ -109,12 +105,12 @@ async function loopTrade(botAccount, botPair){
   const newAccount = await server.loadAccount(botAccount.id);
 
   const actualOffers = await fetchOffers(newAccount);
-
-  log.info('offer', `Offers:${actualOffers.length}|Balance:${showWallets(newAccount)}|Time:${(Date.now() - startTime) / 1000}`);
-
+  const wallets = newAccount.balances;
   const upWallets = getUpWallets(newAccount.balances);
 
-  const operations = updateOffers(upWallets, actualOffers);
+  log.info('offer', `Offers:${actualOffers.length}|upWallets:${upWallets.length}|Balance:${showWallets(newAccount)}|Time:${(Date.now() - startTime) / 1000}`); // eslint-disable-line max-len
+
+  const operations = updateOffers(wallets, actualOffers);
 
   if(operations.length > 0){
 
@@ -128,4 +124,6 @@ async function loopTrade(botAccount, botPair){
 
 }
 
-module.exports = { loopTrade };
+module.exports = {
+  loopTrade, updateOffers
+};

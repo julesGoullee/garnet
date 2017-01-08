@@ -2,16 +2,22 @@
   "name": "garnet",
   "version": "0.0.1",
   "description": "des",
-  "main": "index.js",
+  "main": "bot/index.js",
+  "engines": {
+    "node": "7.4.0",
+    "npm": "4.0.5"
+  },
   "scripts": {
+    "test": "mocha --harmony-async-await --trace-warnings -R spec ./test/test.config.js ./test/spec/*.js --timeout 5000",
     "lint": "eslint .",
-    "bot": "node bot",
-    "gen-accounts": "node genAccounts"
+    "travis": "npm run lint && npm run test",
+    "bot": "node --harmony-async-await --trace-warnings bot",
+    "gen-accounts": "node --harmony-async-await --trace-warnings genAccounts"
   },
   "repository": {
     "type": "git"
   },
-  "author": "",
+  "author": "Jules Goullée",
   "license": "MIT",
   "dependencies": {
     "babel-eslint": "7.1.1",
@@ -19,21 +25,16 @@
     "chai": "3.5.0",
     "chai-as-promised": "6.0.0",
     "chai-spies": "0.7.1",
-    "cors": "2.8.1",
-    "decimal.js": "^7.1.0",
+    "decimal.js": "7.1.0",
     "eslint": "3.10.2",
     "eslint-plugin-babel": "4.0.0",
     "eslint-plugin-no-async-without-await": "1.2.0",
-    "express": "4.14.0",
-    "express-graphql": "0.6.1",
-    "graphql": "0.8.2",
-    "jsonfile": "^2.4.0",
+    "jsonfile": "2.4.0",
     "mocha": "3.2.0",
     "mock-require": "2.0.1",
     "npmlog": "4.0.2",
     "request": "2.79.0",
     "request-promise": "4.1.1",
-    "response-time": "2.3.2",
     "stellar-sdk": "0.6.2",
     "uuid-random": "1.0.5"
   }

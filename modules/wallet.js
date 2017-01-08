@@ -22,7 +22,7 @@ function getUpWallets(wallets){
 
 function showWallets(account){
 
-  return account.balances.map(wallet => wallet.asset_code ? `${wallet.asset_code} - ${wallet.balance} ` : ` XLM:${wallet.balance} `); // eslint-disable-line no-confusing-arrow, max-len
+  return account.balances.map(wallet => wallet.asset_code ? `${wallet.asset_code} - ${wallet.balance} ` : `XLM:${wallet.balance} `); // eslint-disable-line no-confusing-arrow, max-len
 
 }
 
