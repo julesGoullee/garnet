@@ -1,16 +1,18 @@
 require('../config/globalConfig');
-const StellarSdk = require('stellar-sdk');
+const Stellar = require('stellar-sdk');
 const rp = require('request-promise');
 const log = require('npmlog');
 const jsonFile = require('jsonfile');
 const { HORIZON_ENDPOINT } = require('../config');
-const { showBalance, payment, trustAssets } = require('./utils');
+const { showWallets } = require('../modules/wallet');
+const payment = require('../modules/payment');
+const trustAssets = require('../modules/trustAssets');
 
-const server = new StellarSdk.Server(HORIZON_ENDPOINT);
+const server = new Stellar.Server(HORIZON_ENDPOINT);
 
 async function generatePair(){
 
-  const pair = StellarSdk.Keypair.random();
+  const pair = Stellar.Keypair.random();
 
   await rp.get({
     url: `${HORIZON_ENDPOINT}/friendbot`,
@@ -28,7 +30,7 @@ async function genIssuer(assetCode){
 
   const pair = await generatePair();
   const account = await server.loadAccount(pair.accountId() );
-  const asset = new StellarSdk.Asset(assetCode, pair.accountId() );
+  const asset = new Stellar.Asset(assetCode, pair.accountId() );
 
   log.info('genIssuer', `issuerAccount:${pair.accountId()}|asset:${assetCode}`);
 
@@ -45,14 +47,14 @@ async function genAnchor(issuer){
   const pair = await generatePair();
   const account = await server.loadAccount(pair.accountId() );
 
-  log.info('genAnchor', `AnchorAccount:${pair.accountId()}|balance:${showBalance(account)}`);
+  log.info('genAnchor', `AnchorAccount:${pair.accountId()}|balance:${showWallets(account)}`);
 
   await trustAssets(account, pair, [issuer.asset]);
   await payment(issuer.account, issuer.pair, pair, '100000', issuer.asset);
 
   const refreshAccount = await server.loadAccount(pair.accountId() );
 
-  log.info('genAnchor', `RefreshAnchorAccount:${pair.accountId()}|balance:${showBalance(refreshAccount)}`);
+  log.info('genAnchor', `RefreshAnchorAccount:${pair.accountId()}|balance:${showWallets(refreshAccount)}`);
 
   return {
     pair,
@@ -67,7 +69,7 @@ async function genBot(anchors){
   const pair = await generatePair();
   const account = await server.loadAccount(pair.accountId() );
 
-  log.info('genBotAccount', `BotAccount:${pair.accountId()}|balance:${showBalance(account)}`);
+  log.info('genBotAccount', `BotAccount:${pair.accountId()}|balance:${showWallets(account)}`);
 
   await trustAssets(account, pair, anchors.map(anchor => anchor.asset) );
   payment(anchors[0].account, anchors[0].pair, pair, '1000', anchors[0].asset);
@@ -76,7 +78,7 @@ async function genBot(anchors){
 
   const refreshAccount = await server.loadAccount(pair.accountId() );
 
-  log.info('genBotAccount', `RefreshBotAccount:${pair.accountId()}|balance:${showBalance(refreshAccount)}`);
+  log.info('genBotAccount', `RefreshBotAccount:${pair.accountId()}|balance:${showWallets(refreshAccount)}`);
 
   return {
     pair,

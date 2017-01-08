@@ -4,7 +4,9 @@
   "description": "des",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "bot": "node bot",
+    "gen-accounts": "node genAccounts"
   },
   "repository": {
     "type": "git"
