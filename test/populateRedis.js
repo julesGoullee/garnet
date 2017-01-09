@@ -70,13 +70,15 @@ async function launch(){
 
   const client = await redis.createClient();
 
+  log.info('rateKey', 'FLUSHALL');
+
   await client.flushallAsync();
 
   const opts = walletsTrade.reduce( (acc, walletTrade) => {
 
     const assetKey = `${walletTrade.asset.isNative() ? 'NATIVE-' : ''}${walletTrade.asset.getCode()}`;
 
-    log.info('assetKey', `${assetKey}|min:${walletTrade.min}|perc:${walletTrade.perc}`);
+    // log.info('assetKey', `${assetKey}|min:${walletTrade.min}|perc:${walletTrade.perc}`);
 
     acc.push(['hmset', assetKey, 'min', walletTrade.min, 'perc', walletTrade.perc]);
 
