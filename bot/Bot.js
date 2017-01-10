@@ -21,7 +21,7 @@ class Bot {
     
     } catch(e){
 
-      console.error('Invalid seed');
+      log.error('bot', 'Invalid seed');
       throw e;
     
     }
@@ -46,6 +46,7 @@ class Bot {
       } catch(e){
 
         console.error(e);
+        await sleep(BOT_CHECK_BALANCE_TIMER);
 
         // running = false;
       
@@ -84,14 +85,15 @@ class Bot {
     let operations = [];
     const lastOffers = filterOffers(actualOffers, wallet.asset, walletTrade.asset);
     const bnActualBalance = new Decimal(wallet.balance);
-    const price = new Decimal(await this.oracle.getPrice(wallet.asset, walletTrade.asset));
-    const bnUpdateAmount = new Decimal(await this.oracle.getAmount(wallet));
+    const price = await this.oracle.getPrice(wallet.asset, walletTrade.asset);
 
     if(bnActualBalance.isZero() || !price || wallet.asset.isNative() ){
 
       return lastOffers.map(deleteOfferOperation);
 
     }
+
+    const bnUpdateAmount = new Decimal(await this.oracle.getAmount(wallet));
 
     if(lastOffers.length > 0){
 
@@ -103,17 +105,17 @@ class Bot {
 
       if(bnActualOfferAmount.equals(bnUpdateAmount) ){
 
-        log.silly('price', `NothingChangeOffer|Selling:${showAssetCode(wallet.asset)}|Buying:${showAssetCode(lastOffer.buying.asset)}|Price:${price.toString()}|Balance:${wallet.balance}`); // eslint-disable-line max-len
+        log.silly('price', `NothingChangeOffer|Selling:${showAssetCode(wallet.asset)}|Buying:${showAssetCode(lastOffer.buying.asset)}|Price:${price}|Balance:${wallet.balance}`); // eslint-disable-line max-len
 
       } else{
 
-        log.info('price', `UpdateOffer|Selling:${showAssetCode(wallet.asset)}|Buying:${showAssetCode(lastOffer.buying.asset)}|Price:${price.toString()}|Balance:${wallet.balance}|UpdateAmount:${bnUpdateAmount}`); // eslint-disable-line max-len
+        log.info('price', `UpdateOffer|Selling:${showAssetCode(wallet.asset)}|Buying:${showAssetCode(lastOffer.buying.asset)}|Price:${price}|Balance:${wallet.balance}|UpdateAmount:${bnUpdateAmount}`); // eslint-disable-line max-len
 
         operations.push(Stellar.Operation.manageOffer({
           selling: wallet.asset,
           buying: walletTrade.asset,
           amount: bnUpdateAmount.toString(),
-          price: price.toString(),
+          price: price,
           offerId: lastOffer.id
         }) );
 

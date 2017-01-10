@@ -5,7 +5,7 @@ const log = require('npmlog');
 const { HORIZON_ENDPOINT } = require('../config');
 const { showWallets } = require('../modules/wallet');
 const payment = require('../modules/payment');
-const trustAssets = require('../modules/trustAssets');
+const { trustAssets } = require('../modules/asset');
 const { loadAccount } = require('../modules/account');
 
 async function generatePair(){

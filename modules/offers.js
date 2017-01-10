@@ -2,12 +2,11 @@ const log = require('npmlog');
 const Stellar = require('stellar-sdk');
 const { HORIZON_ENDPOINT } = require('../config');
 const server = new Stellar.Server(HORIZON_ENDPOINT);
-const { assetInstance } = require('../modules/utils');
-const { showAssetCode } = require('../modules/wallet');
+const { assetInstance, assetUid } = require('../modules/asset');
 
 function deleteOfferOperation(offer){
 
-  log.info('offer', `Delete|assetSelling:${showAssetCode(offer.selling.asset)}|assetBuying:${showAssetCode(offer.buying.asset)}|LastAmount:${offer.amount}`); // eslint-disable-line max-len
+  log.info('offer', `Delete|assetSelling:${assetUid(offer.selling.asset)}|assetBuying:${assetUid(offer.buying.asset)}|LastAmount:${offer.amount}`); // eslint-disable-line max-len
 
   return Stellar.Operation.manageOffer({
     selling: offer.selling.asset,

@@ -1,16 +1,10 @@
 const log = require('npmlog');
 const Decimal = require('decimal.js');
-
-function showAssetCode(asset){
-
-  return asset.isNative() ? 'XLM_NATIVE' : `${asset.code} - ${asset.issuer}`;
-
-}
-
+const { assetUid } = require('../modules/asset');
 
 function showWallets(account){
 
-  return account.balances.map(wallet => `${showAssetCode(wallet.asset)}|Balance:${wallet.balance}`); // eslint-disable-line no-confusing-arrow, max-len
+  return account.balances.map(wallet => `${assetUid(wallet.asset)}|Balance:${wallet.balance}`); // eslint-disable-line no-confusing-arrow, max-len
 
 }
 
@@ -22,7 +16,7 @@ function getUpWallets(wallets){
 
     if(bnBalance.isPositive() && !bnBalance.isZero() ){
 
-      log.info('upWallet', `${showAssetCode(wallet.asset)}|Balance:${wallet.balance}`);
+      log.info('upWallet', `${assetUid(wallet.asset)}|Balance:${wallet.balance}`);
       acc.push(wallet);
 
     }
@@ -34,7 +28,6 @@ function getUpWallets(wallets){
 }
 
 module.exports = {
-  showAssetCode,
   showWallets,
   getUpWallets
 };
