@@ -403,7 +403,7 @@ module.exports = {
       'arraysInObjects': false,
       'objectsInObjects': false
     }],
-    'babel/no-await-in-loop': 2,
+    'babel/no-await-in-loop': 0,
 
   }
 

@@ -88,7 +88,7 @@ async function launch(){
 
       log.info('rateKey', `${rateKey}|rate:${rate.value}`);
 
-      return ['hmset', rateKey, 'rate', rate.value];
+      return ['hmset', rateKey, 'price', rate.value];
 
     });
 

@@ -1,11 +1,11 @@
 /* eslint max-nested-callbacks:[2, 5], array-callback-return: 0, camelcase: 0 */
 
-const getRate = require('../../modules/getRate');
+const getRate = require('../../modules/getPrice');
 const { assetInstance } = require('../../modules/utils');
 
-describe('getRate', () => {
+describe('getPrice', () => {
 
-  it('Should get rate', async () => {
+  it('Should get price', async () => {
 
     const wallet = {
       balance: '500.0000000',
@@ -29,14 +29,14 @@ describe('getRate', () => {
       })
     };
 
-    const result = await getRate(wallet, walletTrade);
+    const rate = await getRate(wallet, walletTrade);
 
-    expect(result.amount.toString() ).to.equals('400');
-    expect(result.rate.toString() ).to.equals('0.7');
+    expect(rate.amount.toString() ).to.equals('400');
+    expect(rate.value.toString() ).to.equals('0.7');
 
   });
 
-  it('Should get native rate', async () => {
+  it('Should get native price', async () => {
 
     const wallet = {
       balance: '500.0000000',
@@ -56,14 +56,14 @@ describe('getRate', () => {
       asset: assetInstance({ asset_type: 'native' })
     };
 
-    const result = await getRate(wallet, walletTrade);
+    const rate = await getRate(wallet, walletTrade);
 
-    expect(result.amount.toString() ).to.equals('400');
-    expect(result.rate.toString() ).to.equals('1.1');
+    expect(rate.amount.toString() ).to.equals('400');
+    expect(rate.value.toString() ).to.equals('1.1');
 
   });
 
-  it('Should set native rate', async () => {
+  it('Should set native price', async () => {
 
     const wallet = {
       balance: '1000.0000000',
@@ -83,10 +83,10 @@ describe('getRate', () => {
       })
     };
 
-    const result = await getRate(wallet, walletTrade);
+    const rate = await getRate(wallet, walletTrade);
 
-    expect(result.amount.toString() ).to.equals('500');
-    expect(result.rate.toString() ).to.equals('1.4');
+    expect(rate.amount.toString() ).to.equals('500');
+    expect(rate.value.toString() ).to.equals('1.4');
 
   });
 
