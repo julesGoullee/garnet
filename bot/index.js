@@ -1,6 +1,6 @@
 require('./../config/globalConfig');
 
-const Oracle = require('./../oracles/simpleOracle');
+const Oracle = require('./../oracles/realWorld');
 const Bot = require('./Bot');
 
 const dataAccounts = require('../data/accounts.json');

@@ -79,7 +79,6 @@ class Bot {
   
   }
 
-
   async operationsTradeWallet({ actualOffers, wallet, walletTrade }){
 
     let operations = [];
@@ -93,13 +92,15 @@ class Bot {
 
     }
 
-    const bnUpdateAmount = new Decimal(await this.oracle.getAmount(wallet));
+    const updateAmount = await this.oracle.getAmount(wallet);
+    const bnUpdateAmount = new Decimal(updateAmount);
 
     if(lastOffers.length > 0){
 
       const lastOffer = lastOffers[0];
 
       const bnActualOfferAmount = new Decimal(lastOffer.amount);
+
       operations = operations.concat(removePrevUpOffers(lastOffers) );
 
 
@@ -152,8 +153,9 @@ class Bot {
     const operationPromises = wallets.reduce( (accWallet, wallet) => {
 
       const walletsTrade = wallets.filter(otherWallet => otherWallet !== wallet);
-      const updateOrCreateOps = walletsTrade.reduce( (accWalletTrade, walletTrade) =>
-        accWalletTrade.concat(this.operationsTradeWallet({
+      const updateOrCreateOps = walletsTrade.reduce(async (accWalletTrade, walletTrade) =>
+
+        accWalletTrade.concat(await this.operationsTradeWallet({
           actualOffers,
           wallet,
           walletTrade
@@ -163,7 +165,8 @@ class Bot {
       return accWallet.concat(updateOrCreateOps);
 
     }, []);
-    const nestedArray = await Promise.all(operationPromises);
+
+    const nestedArray = Promise.all(operationPromises);
 
     // flatten array
 

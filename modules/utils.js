@@ -4,7 +4,6 @@ function sleep(time){
 
 }
 
-
 function parseAsync(jsonRes){
 
   return Promise.resolve(JSON.parse(jsonRes) );

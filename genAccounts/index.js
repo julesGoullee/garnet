@@ -1,12 +1,12 @@
 require('../config/globalConfig');
 const log = require('npmlog');
 const jsonFile = require('jsonfile');
-const trustAssets = require('../modules/trustAssets');
 
 const { genIssuer, genAnchor, genBot } = require('../modules/generators');
+
 async function launch(){
 
-  const issuers = await Promise.all([genIssuer('AS1'), genIssuer('AS2')]);
+  const issuers = await Promise.all([genIssuer('USD'), genIssuer('EUR')]);
   const anchors = await Promise.all(issuers.map(issuer => genAnchor(issuer) ) );
   const bot = await genBot(anchors);
 
