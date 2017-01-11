@@ -10,6 +10,8 @@ const { parseAsync, sleep } = require('../modules/utils');
 const { assetUid } = require('../modules/asset');
 const assetCodes = ['EUR', 'USD'];
 const btcAssetCode = 'BTC';
+const Decimal = require('decimal.js');
+const margin = new Decimal('0.001');
 
 function getBtc_RealWorldPrices(){
 
@@ -85,19 +87,19 @@ class Oracle {
 
     if(assetSelling.isNative() ){
 
-      return 0;
+      return false;
 
     }
 
-    if(typeof this.pricesHash[assetSelling.code] === 'object' && typeof this.pricesHash[assetSelling.code][assetBuying.code] === 'string'){
+    if(typeof this.pricesHash[assetSelling.code] === 'object' && this.pricesHash[assetSelling.code][assetBuying.code] instanceof Decimal){
 
-      return this.pricesHash[assetSelling.code][assetBuying.code];
+      // log.info('getPrice', `assetSelling:${assetUid(assetSelling)}|Price:${0}|assetBuying:${assetUid(assetBuying)}`);
+
+      return this.pricesHash[assetSelling.code][assetBuying.code].add(margin).toString();
 
     }
 
-    // log.info('getPrice', `assetSelling:${assetUid(assetSelling)}|Price:${0}|assetBuying:${assetUid(assetBuying)}`);
-
-    return 0;
+    return false;
 
   }
 
@@ -117,7 +119,7 @@ class Oracle {
 
     log.info('updatePrices', `${assetSelling.code}-${assetBuying.code}:${price}`);
 
-    this.pricesHash[assetSelling.code][assetBuying.code] = price;
+    this.pricesHash[assetSelling.code][assetBuying.code] = new Decimal(price);
 
   }
 
