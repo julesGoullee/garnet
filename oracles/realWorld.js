@@ -11,17 +11,30 @@ const { assetUid } = require('../modules/asset');
 const assetCodes = ['EUR', 'USD'];
 const btcAssetCode = 'BTC';
 const Decimal = require('decimal.js');
-const margin = new Decimal('0.001');
+const margin = new Decimal('0.00');
+const bnOne = new Decimal('1.00000');
 
 function getBtc_RealWorldPrices(){
 
   return rp(apiUrlBtc_RealWorld)
     .then(parseAsync)
-    .then(res => assetCodes.map(asset => ({
-      selling: asset,
-      buying: btcAssetCode,
-      rate: res.bpi[asset].rate
-    }) ) )
+    .then( (res) => {
+
+      const btcToRealWorld = assetCodes.map(asset => ({
+        selling: asset,
+        buying: btcAssetCode,
+        rate: res.bpi[asset].rate
+      }) );
+
+      const realWorldToBtc = assetCodes.map(asset => ({
+        selling: btcAssetCode,
+        buying: asset,
+        rate: bnOne.div(new Decimal(res.bpi[asset].rate) ).toString()
+      }) );
+
+      return btcToRealWorld.concat(realWorldToBtc);
+
+    })
     .catch( (err) => {
 
       log.error('updatePrices|getBtc_RealWorldPrices', err);
