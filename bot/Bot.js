@@ -4,10 +4,11 @@ const Stellar = require('stellar-sdk');
 const { HORIZON_ENDPOINT, BOT_CHECK_BALANCE_TIMER } = require('../config');
 const { sleep } = require('../modules/utils');
 const server = new Stellar.Server(HORIZON_ENDPOINT);
-const { showAssetCode, showWallets } = require('../modules/wallet');
+const { showWallets } = require('../modules/wallet');
 const { removePrevUpOffers, deleteOfferOperation, patchOffers, fetchOffers, filterOffers } = require('../modules/offers');
 const { submitTransaction } = require('../modules/transaction');
 const { loadAccountFromSeed } = require('../modules/account');
+const { assetUid } = require('../modules/asset');
 
 class Bot {
   constructor(seed, oracle){
@@ -106,11 +107,11 @@ class Bot {
 
       if(bnActualOfferAmount.equals(bnUpdateAmount) ){
 
-        log.silly('price', `NothingChangeOffer|Selling:${showAssetCode(wallet.asset)}|Buying:${showAssetCode(lastOffer.buying.asset)}|Price:${price}|Balance:${wallet.balance}`); // eslint-disable-line max-len
+        log.silly('price', `NothingChangeOffer|Selling:${assetUid(wallet.asset)}|Buying:${assetUid(lastOffer.buying.asset)}|Price:${price}|Balance:${wallet.balance}`); // eslint-disable-line max-len
 
       } else{
 
-        log.info('price', `UpdateOffer|Selling:${showAssetCode(wallet.asset)}|Buying:${showAssetCode(lastOffer.buying.asset)}|Price:${price}|Balance:${wallet.balance}|UpdateAmount:${bnUpdateAmount}`); // eslint-disable-line max-len
+        log.info('price', `UpdateOffer|Selling:${assetUid(wallet.asset)}|Buying:${assetUid(lastOffer.buying.asset)}|Price:${price}|Balance:${wallet.balance}|UpdateAmount:${bnUpdateAmount}`); // eslint-disable-line max-len
 
         operations.push(Stellar.Operation.manageOffer({
           selling: wallet.asset,
@@ -124,7 +125,7 @@ class Bot {
 
     } else{
 
-      log.info('price', `NewOffer|Selling:${showAssetCode(wallet.asset)}|Buying:${showAssetCode(walletTrade.asset)}|Price:${price.toString()}|Balance:${wallet.balance}|UpdateAmount:${bnUpdateAmount.toString()}`); // eslint-disable-line max-len
+      log.info('price', `NewOffer|Selling:${assetUid(wallet.asset)}|Buying:${assetUid(walletTrade.asset)}|Price:${price.toString()}|Balance:${wallet.balance}|UpdateAmount:${bnUpdateAmount.toString()}`); // eslint-disable-line max-len
 
       operations.push(Stellar.Operation.createPassiveOffer({
         selling: wallet.asset,
@@ -153,24 +154,26 @@ class Bot {
     const operationPromises = wallets.reduce( (accWallet, wallet) => {
 
       const walletsTrade = wallets.filter(otherWallet => otherWallet !== wallet);
-      const updateOrCreateOps = walletsTrade.reduce(async (accWalletTrade, walletTrade) =>
+      const updateOrCreateOps = walletsTrade.reduce( (accWalletTrade, walletTrade) => {
 
-        accWalletTrade.concat(await this.operationsTradeWallet({
+        return accWalletTrade.concat(this.operationsTradeWallet({
           actualOffers,
           wallet,
           walletTrade
         })
-        ), []); // eslint-disable-line max-len
+        );
 
-      return accWallet.concat(updateOrCreateOps);
+      }, []);
+
+      return accWallet.concat(...updateOrCreateOps);
 
     }, []);
 
-    const nestedArray = Promise.all(operationPromises);
+    const nestedArray = await Promise.all(operationPromises);
 
     // flatten array
 
-    return [].concat.apply([], nestedArray);
+    return [].concat(...nestedArray);
   
   }
 }

@@ -41,4 +41,6 @@ async function loadAccount(accountId){
 
 }
 
-module.exports = { loadAccount, loadAccountFromSeed, patchAccount };
+module.exports = {
+  loadAccount, loadAccountFromSeed, patchAccount
+};

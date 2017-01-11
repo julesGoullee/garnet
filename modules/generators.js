@@ -89,5 +89,5 @@ module.exports = {
   generatePair,
   genIssuer,
   genAnchor,
-  genBot,
+  genBot
 };

@@ -23,16 +23,21 @@ function assetInstance(asset){
 
 }
 
-function assetUid(rawAsset) {
+function assetUid(rawAsset){
+
   const asset = assetInstance(rawAsset);
 
-  if(asset.isNative()) {
+  if(asset.isNative() ){
+
     return 'native';
+  
   }
   let str = 'custom:';
+
   str += asset.getCode();
   str += ':';
   str += asset.getIssuer();
+  
   return str;
 
 }
