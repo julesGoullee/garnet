@@ -11,7 +11,7 @@ const { assetUid } = require('../modules/asset');
 const assetCodes = ['EUR', 'USD'];
 const btcAssetCode = 'BTC';
 const Decimal = require('decimal.js');
-const margin = new Decimal('0.00');
+const margin = new Decimal('0.001');
 const bnOne = new Decimal('1.00000');
 
 function getBtc_RealWorldPrices(){
@@ -29,7 +29,7 @@ function getBtc_RealWorldPrices(){
       const realWorldToBtc = assetCodes.map(asset => ({
         selling: btcAssetCode,
         buying: asset,
-        rate: bnOne.div(new Decimal(res.bpi[asset].rate) ).toString()
+        rate: bnOne.div(new Decimal(res.bpi[asset].rate) ).toPrecision(4)
       }) );
 
       return btcToRealWorld.concat(realWorldToBtc);
@@ -50,7 +50,7 @@ function fixerCall(assetSelling, assetBuying){
     .then(priceRes => ({
       selling: assetSelling,
       buying: assetBuying,
-      rate: priceRes.rates[assetBuying].toString()
+      rate: priceRes.rates[assetBuying].toPrecision(4)
     }) )
     .catch( (err) => {
 

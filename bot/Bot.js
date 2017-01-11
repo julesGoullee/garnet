@@ -109,7 +109,7 @@ class Bot {
 
       if(bnActualOfferAmount.equals(bnUpdateAmount) && bnActualOfferPrice.equals(bnUpdatePrice) ){
 
-        log.silly('price', `NothingChangeOffer|Selling:${assetUid(wallet.asset)}|Buying:${assetUid(lastOffer.buying.asset)}|Price:${price}|Balance:${wallet.balance}`); // eslint-disable-line max-len
+        // log.silly('price', `NothingChangeOffer|Selling:${assetUid(wallet.asset)}|Buying:${assetUid(lastOffer.buying.asset)}|Price:${price}|Balance:${wallet.balance}`); // eslint-disable-line max-len
 
       } else{
 
