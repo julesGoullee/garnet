@@ -70,9 +70,10 @@ async function genBot(anchors){
   log.info('genBotAccount', `BotAccount:${pair.accountId()}|balance:${showWallets(account)}`);
 
   await trustAssets(account, pair, anchors.map(anchor => anchor.asset) );
-  payment(anchors[0].account, anchors[0].pair, pair, '1000', anchors[0].asset);
 
-  // await Promise.all(anchors.map(anchor => payment(anchor.account, anchor.pair, pair, '1000', anchor.asset) ) );
+  // payment(anchors[0].account, anchors[0].pair, pair, '1000', anchors[0].asset);
+
+  await Promise.all(anchors.map(anchor => payment(anchor.account, anchor.pair, pair, '1000', anchor.asset) ) );
 
   const refreshAccount = await loadAccount(pair.accountId() );
 
