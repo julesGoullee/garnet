@@ -27,23 +27,52 @@ async function submitTransaction(operations, account, pair){
 
   log.info('transaction', `SendOperations:${operations.length}|AccountId:${account.id}`);
 
-  // const sequenceNumber = account.sequence;
-  // const transAccount = new Stellar.Account(pair.accountId(), sequenceNumber);
-
   const transactionBuilder = new Stellar.TransactionBuilder(account);
 
   bulkOperations(transactionBuilder, operations);
+
   const transaction = transactionBuilder.build();
 
   transaction.sign(pair);
 
-  const transactionRes = await server.submitTransaction(transaction).catch(err => {
+  await server.submitTransaction(transaction)
+    .then(transactionRes => log.info('transaction', `Url:${getTransactionUrl(transactionRes)}`) )
+    .catch(err => log.error('submitTransaction', err.extras) );
 
-    log.error('submitTransaction', err); // TODO cannot self_offer
+  return true;
 
-  });
+}
 
-  log.info('transaction', `Url:${getTransactionUrl(transactionRes)}`);
+async function submitTransactionSeries(operations, account, pair){
+
+  if(operations.length === 0){
+
+    log.info('submitTransaction', 'No operations');
+
+    return false;
+
+  }
+
+  log.info('transaction', `SendOperations:${operations.length}|AccountId:${account.id}`);
+
+  let sequenceNumber = account.sequence;
+  let transAccount = new Stellar.Account(pair.accountId(), sequenceNumber);
+
+  while(operations.length > 0){
+
+    sequenceNumber = transAccount.sequence.toString();
+    transAccount = new Stellar.Account(pair.accountId(), sequenceNumber);
+
+    const transactionBuilder = new Stellar.TransactionBuilder(transAccount);
+    const transaction = transactionBuilder.addOperation(operations.pop() ).build();
+
+    transaction.sign(pair);
+
+    await server.submitTransaction(transaction)
+      .then(transactionRes => log.info('transaction', `Url:${getTransactionUrl(transactionRes)}`) )
+      .catch(err => log.error('submitTransaction', err.extras) );
+
+  }
 
   return true;
 
@@ -52,5 +81,6 @@ async function submitTransaction(operations, account, pair){
 module.exports = {
   bulkOperations,
   getTransactionUrl,
-  submitTransaction
+  submitTransaction,
+  submitTransactionSeries
 };
