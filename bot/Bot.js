@@ -95,28 +95,30 @@ class Bot {
 
     const updateAmount = await this.oracle.getAmount(wallet);
     const bnUpdateAmount = new Decimal(updateAmount);
+    const bnUpdatePrice = new Decimal(price);
 
     if(lastOffers.length > 0){
 
       const lastOffer = lastOffers[0];
 
       const bnActualOfferAmount = new Decimal(lastOffer.amount);
+      const bnActualOfferPrice = new Decimal(lastOffer.price);
 
       operations = operations.concat(removePrevUpOffers(lastOffers) );
 
 
-      if(bnActualOfferAmount.equals(bnUpdateAmount) ){
+      if(bnActualOfferAmount.equals(bnUpdateAmount) && bnActualOfferPrice.equals(bnUpdatePrice) ){
 
         log.silly('price', `NothingChangeOffer|Selling:${assetUid(wallet.asset)}|Buying:${assetUid(lastOffer.buying.asset)}|Price:${price}|Balance:${wallet.balance}`); // eslint-disable-line max-len
 
       } else{
 
-        log.info('price', `UpdateOffer|Selling:${assetUid(wallet.asset)}|Buying:${assetUid(lastOffer.buying.asset)}|Price:${price}|Balance:${wallet.balance}|UpdateAmount:${bnUpdateAmount}`); // eslint-disable-line max-len
+        log.info('price', `UpdateOffer|Selling:${assetUid(wallet.asset)}|Buying:${assetUid(lastOffer.buying.asset)}|Price:${price}|Balance:${wallet.balance}|Amount:${updateAmount}`); // eslint-disable-line max-len
 
         operations.push(Stellar.Operation.manageOffer({
           selling: wallet.asset,
           buying: walletTrade.asset,
-          amount: bnUpdateAmount.toString(),
+          amount: updateAmount,
           price: price,
           offerId: lastOffer.id
         }) );
@@ -130,8 +132,8 @@ class Bot {
       operations.push(Stellar.Operation.createPassiveOffer({
         selling: wallet.asset,
         buying: walletTrade.asset,
-        amount: bnUpdateAmount.toString(),
-        price: price.toString(),
+        amount: updateAmount,
+        price: price,
         offerId: 0
       }) );
 

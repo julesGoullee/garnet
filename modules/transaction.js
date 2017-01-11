@@ -27,6 +27,9 @@ async function submitTransaction(operations, account, pair){
 
   log.info('transaction', `SendOperations:${operations.length}|AccountId:${account.id}`);
 
+  // const sequenceNumber = account.sequence;
+  // const transAccount = new Stellar.Account(pair.accountId(), sequenceNumber);
+
   const transactionBuilder = new Stellar.TransactionBuilder(account);
 
   bulkOperations(transactionBuilder, operations);
@@ -34,7 +37,11 @@ async function submitTransaction(operations, account, pair){
 
   transaction.sign(pair);
 
-  const transactionRes = await server.submitTransaction(transaction);
+  const transactionRes = await server.submitTransaction(transaction).catch(err => {
+
+    log.error('submitTransaction', err); // TODO cannot self_offer
+
+  });
 
   log.info('transaction', `Url:${getTransactionUrl(transactionRes)}`);
 
