@@ -19,8 +19,10 @@ module.exports = async function payment(sellerAccount, sellerPair, buyPair, amou
 
   transaction.sign(sellerPair);
 
-  const transactionRes = await server.submitTransaction(transaction);
+  await server.submitTransaction(transaction)
+    .then(transactionRes => log.info('payment', `transactionPayment|Url:${getTransactionUrl(transactionRes)}`) )
+    .catch(err => log.error('submitTransaction', err.extras) );
 
-  log.info('payment', `transactionPayment|Url:${getTransactionUrl(transactionRes)}`);
+  return true;
 
 };
