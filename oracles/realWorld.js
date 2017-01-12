@@ -140,7 +140,7 @@ class Oracle {
 
     if(wallet.asset.isNative() ){
 
-      return 0;
+      return '0';
 
     }
 
@@ -174,7 +174,7 @@ class Oracle {
 
     // const lxmBtcPricePromise = getLxmBtcPrice().then( (lxmBtcPrice) => {
     //
-    //   prices.push(lxmBtcPrice);
+    //   prices.push(lxmBtcPrice); //TODO bind (lxm -> btc) - (btc -> usd & btc -> eur) => (lxm -> eur & lxm -> usd)
     //
     // }).catch(err => log.info('updatePriceLxmBtc', err) );
 
