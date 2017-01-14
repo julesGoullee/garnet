@@ -103,7 +103,7 @@ class Oracle {
 
       await this.updatePrices().catch(err => log.error('updatePrices', err) );
 
-      await sleep(ORACLE_CHECK_PRICE_TIMER);
+      await sleep(ORACLE_CHECK_PRICE_TIMER * 1000);
 
     }
 
