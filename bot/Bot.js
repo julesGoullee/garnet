@@ -1,8 +1,8 @@
 const log = require('npmlog');
 const Stellar = require('stellar-sdk');
-const { HORIZON_ENDPOINT, BOT_CHECK_BALANCE_TIMER } = require('../config');
 const { sleep } = require('../modules/utils');
-const server = new Stellar.Server(HORIZON_ENDPOINT);
+const { HORIZON_ENDPOINT, SERVER_CONFIG, BOT_CHECK_BALANCE_TIMER } = require('../config');
+const server = new Stellar.Server(HORIZON_ENDPOINT, SERVER_CONFIG);
 const { showWallets } = require('../modules/wallet');
 const { removePrevUpOffers, deleteOfferOperation, patchOffers, fetchOffers, filterOffers } = require('../modules/offers');
 const { submitTransaction } = require('../modules/transaction');
