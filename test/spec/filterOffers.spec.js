@@ -1,8 +1,8 @@
 /* eslint max-nested-callbacks:[2, 5], array-callback-return: 0, camelcase: 0 */
 
 const Stellar = require('stellar-sdk');
-const filterOffers = require('../../modules/filterOffers');
-const { assetInstance } = require('../../modules/utils');
+const { filterOffers } = require('../../modules/offers');
+const { assetInstance } = require('../../modules/asset');
 
 describe('filterOffers', () => {
 

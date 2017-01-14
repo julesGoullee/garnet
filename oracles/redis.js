@@ -33,7 +33,7 @@ function magicChoice(balance, bnRate, bnPerc, bnMin){
 }
 
 class Oracle {
-  async getPrice(assetSelling, assetBuying){ // eslint-disable-line max-statements, complexity
+  static async getPrice(assetSelling, assetBuying){ // eslint-disable-line max-statements, complexity
 
     const key = `${assetSelling.isNative() ? 'NATIVE-' : ''}${assetBuying.getCode()}:${assetBuying.isNative() ? 'NATIVE-' : ''}${assetBuying.getCode()}`; // eslint-disable-line max-len
     const rateRes = await client.hmgetAsync(key, 'price');
@@ -63,17 +63,17 @@ class Oracle {
 
     if(bnRate.isNaN() || bnPerc.isNaN() ){
 
-      log.error('getPrice', `bgMin or bgPerc NaN|bgMin:${bnMin}|bgPerc${bnPerc}|Rate:${bnRate.toString()}|Balance:${asset.balance}|assetKey:${assetKey}`); // eslint-disable-line max-len
+      log.error('getPrice', `bgMin or bgPerc NaN|bgMin:${bnMin}|bgPerc${bnPerc}|Rate:${bnRate.toString()}|Balance:${assetSelling.balance}|assetKey:${assetKey}`); // eslint-disable-line max-len
 
       return false;
 
     }
 
-    return magicChoice(asset.balance, bnRate, bnPerc, bnMin);
+    return magicChoice(assetSelling.balance, bnRate, bnPerc, bnMin);
 
   }
 
-  async getAmount(wallet){
+  static async getAmount(wallet){
 
     const bnActualBalance = new Decimal(wallet.balance);
 

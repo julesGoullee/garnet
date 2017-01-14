@@ -80,7 +80,7 @@ class Bot {
   
   }
 
-  async operationsTradeWallet({ actualOffers, wallet, walletTrade }){
+  async operationsTradeWallet({ actualOffers, wallet, walletTrade }){ // eslint-disable-line max-statements, complexity
 
     let operations = [];
     const lastOffers = filterOffers(actualOffers, wallet.asset, walletTrade.asset);
@@ -106,7 +106,10 @@ class Bot {
 
       if(bnActualOfferAmount.equals(bnUpdateAmount) && lastOffer.price_r.n === price.n && lastOffer.price_r.d === price.d){
 
-        // log.silly('price', `NothingChangeOffer|Selling:${assetUid(wallet.asset)}|Buying:${assetUid(lastOffer.buying.asset)}|Price:${price}|Balance:${wallet.balance}`); // eslint-disable-line max-len
+        // log.silly('price', `NoChangeOffer|
+        // Selling:${assetUid(wallet.asset)}|
+        // Buying:${assetUid(lastOffer.buying.asset)}|
+        // Price:${price}|Balance:${wallet.balance}`);
 
       } else{
 

@@ -7,41 +7,11 @@ global.expect = global.chai.expect;
 const spy = require('chai-spies');
 const chaiAsPromised = require('chai-as-promised');
 const mock = require('mock-require');
-const mockCreateClient = require('./mockRedis');
+const mockCreateClient = require('./mock/mockRedis');
+const MockStellarAsset = require('./mock/mockAsset');
 
 global.chai.use(chaiAsPromised);
 global.chai.use(spy);
-
-function MockStellarAsset(code, issuer){
-
-  this.code = code;
-  this.issuer = issuer;
-
-}
-
-MockStellarAsset.prototype.isNative = function isNative(){
-
-  return typeof this.issuer !== 'string' && this.code === 'XLM';
-
-};
-
-MockStellarAsset.prototype.getCode = function getCode(){
-
-  return this.code;
-
-};
-
-MockStellarAsset.prototype.equals = function equals(assetCompare){
-
-  return (assetCompare.isNative() && this.isNative() ) || (this.code === assetCompare.code && this.issuer === assetCompare.issuer);
-
-};
-
-MockStellarAsset.native = function native(){
-
-  return new MockStellarAsset('XLM', null);
-
-};
 
 mock('stellar-sdk', {
   Operation: {

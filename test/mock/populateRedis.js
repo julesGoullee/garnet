@@ -1,10 +1,10 @@
 /* eslint camelcase: 0 */
 
-require('./../config/globalConfig');
-require('./test.config');
+require('./../../config/globalConfig');
+require('./../test.config.js');
 const log = require('npmlog');
 const redis = require('redis');
-const { assetInstance } = require('../modules/utils');
+const { assetInstance } = require('../../modules/utils');
 
 const walletsTrade = [
   {

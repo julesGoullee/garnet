@@ -14,7 +14,7 @@ function getUpWallets(wallets){
 
     const bnBalance = new BigNumber(wallet.balance);
 
-    if(bnBalance.isPositive() && !bnBalance.isZero() ){
+    if(!bnBalance.isNegative() && !bnBalance.isZero() ){
 
       log.info('upWallet', `${assetUid(wallet.asset)}|Balance:${wallet.balance}`);
       acc.push(wallet);

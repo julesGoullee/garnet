@@ -1,6 +1,6 @@
 const { priceToNumber } = require('../../modules/utils');
 
-describe.only('PriceToNumber', () => {
+describe('PriceToNumber', () => {
 
   it('Should get int', () => {
 

@@ -1,7 +1,7 @@
 /* eslint max-nested-callbacks:[2, 5], array-callback-return: 0, camelcase: 0 */
 
 const { getUpWallets, showWallets } = require('../../modules/wallet');
-const { assetInstance } = require('../../modules/utils');
+const { assetInstance } = require('../../modules/asset');
 
 describe('Wallet', () => {
 
@@ -33,7 +33,7 @@ describe('Wallet', () => {
           asset_code: 'AS2',
           asset_issuer: 'AS2_ISSUER',
           asset: assetInstance({
-            asset_type: 'AS2', asset_issuer: 'AS2_ISSUER'
+            asset_code: 'AS2', asset_issuer: 'AS2_ISSUER'
           })
         }
       ];
@@ -106,8 +106,8 @@ describe('Wallet', () => {
       ]};
 
       expect(showWallets(account) ).to.deep.equals([
-        'AS1 - AS1_ISSUER|Balance:944.0000000',
-        'AS2 - AS2_ISSUER|Balance:1.0000000'
+        'custom:AS1:AS1_ISSUER|Balance:944.0000000',
+        'custom:AS2:AS2_ISSUER|Balance:1.0000000'
       ]);
 
     });
@@ -143,9 +143,9 @@ describe('Wallet', () => {
       ]};
 
       expect(showWallets(account) ).to.deep.equals([
-        'AS1 - AS1_ISSUER|Balance:944.0000000',
-        'AS2 - AS2_ISSUER|Balance:1.0000000',
-        'XLM_NATIVE|Balance:10.0000000'
+        'custom:AS1:AS1_ISSUER|Balance:944.0000000',
+        'custom:AS2:AS2_ISSUER|Balance:1.0000000',
+        'native|Balance:10.0000000'
       ]);
 
     });
