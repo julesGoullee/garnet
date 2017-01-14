@@ -4,88 +4,36 @@
 require('../config/globalConfig');
 const log = require('npmlog');
 const rp = require('request-promise');
-const apiUrlBtc_RealWorld = 'http://api.coindesk.com/v1/bpi/currentprice/EUR.json';
-const apiUrlRealWorld = 'http://api.fixer.io/latest?symbols=';
-const { parseAsync, sleep } = require('../modules/utils');
-const { assetUid } = require('../modules/asset');
-const assetCodes = ['EUR', 'USD'];
-const btcAssetCode = 'BTC';
-const Decimal = require('decimal.js');
-const margin = new Decimal('0.001');
-const bnOne = new Decimal('1.00000');
+const { parseAsync, sleep, priceToNumber } = require('../modules/utils');
+const assetCodes = ['EUR', 'USD', 'JPY'];
+const base = 'USD';
+const apiUrlRealWorld = `http://api.fixer.io/latest?base=${base}`;
 
-function getBtc_RealWorldPrices(){
+function fixerCall(){
 
-  return rp(apiUrlBtc_RealWorld)
+  return rp(apiUrlRealWorld)
     .then(parseAsync)
-    .then( (res) => {
-
-      const btcToRealWorld = assetCodes.map(asset => ({
-        selling: asset,
-        buying: btcAssetCode,
-        rate: res.bpi[asset].rate
-      }) );
-
-      const realWorldToBtc = assetCodes.map(asset => ({
-        selling: btcAssetCode,
-        buying: asset,
-        rate: bnOne.div(new Decimal(res.bpi[asset].rate) ).toPrecision(4)
-      }) );
-
-      return btcToRealWorld.concat(realWorldToBtc);
-
-    })
-    .catch( (err) => {
-
-      log.error('updatePrices|getBtc_RealWorldPrices', err);
-
-    });
-
-}
-
-function fixerCall(assetSelling, assetBuying){
-
-  return rp(`${apiUrlRealWorld}${assetSelling},${assetBuying}&base=${assetSelling}`)
-    .then(parseAsync)
-    .then(priceRes => ({
-      selling: assetSelling,
-      buying: assetBuying,
-      rate: priceRes.rates[assetBuying].toPrecision(4)
-    }) )
-    .catch( (err) => {
-
-      if(err.error.includes('Invalid base') ){
-
-        log.error('updatePrices', `NotFound|assetSellingCode:${assetSelling}`);
-
-      } else{
-
-        log.error('updatePrices', err);
-
+    .then(priceRes => assetCodes.filter(assetCode => assetCode !== base).reduce( (acc, assetCode) => acc.concat([
+      {
+        selling: priceRes.base,
+        buying: assetCode,
+        rate: priceToNumber({
+          n: '1',
+          d: priceRes.rates[assetCode].toString()
+        })
+      },
+      {
+        selling: assetCode,
+        buying: priceRes.base,
+        rate: priceToNumber({
+          n: priceRes.rates[assetCode].toString(),
+          d: '1'
+        })
       }
-
-    });
-
-}
-
-function getRealWorldPrices(){
-
-  return Promise.all(assetCodes.reduce( (acc, assetFrom) => {
-
-    const otherAssets = assetCodes.filter(asset => asset !== assetFrom);
-    const otherAssetsPrices = otherAssets.map(assetTo => fixerCall(assetFrom, assetTo).catch( (err) => {
-
-      log.error('getRealWorldPrices', err);
-
-    }) );
-
-    return acc.concat(...otherAssetsPrices);
-
-  }, []) );
+    ]), []) )
+    .catch(err => log.error('fixerCall', err) );
 
 }
-
-function getLxmBtcPrice(assetSelling, assetBuying){}
 
 class Oracle {
 
@@ -104,11 +52,11 @@ class Oracle {
 
     }
 
-    if(typeof this.pricesHash[assetSelling.code] === 'object' && this.pricesHash[assetSelling.code][assetBuying.code] instanceof Decimal){
+    if(typeof this.pricesHash[assetSelling.code] === 'object' && typeof this.pricesHash[assetSelling.code][assetBuying.code] === 'object'){
 
       // log.info('getPrice', `assetSelling:${assetUid(assetSelling)}|Price:${0}|assetBuying:${assetUid(assetBuying)}`);
 
-      return this.pricesHash[assetSelling.code][assetBuying.code].add(margin).toString();
+      return this.pricesHash[assetSelling.code][assetBuying.code];
 
     }
 
@@ -130,9 +78,9 @@ class Oracle {
 
     }
 
-    log.info('updatePrices', `${assetSelling.code}-${assetBuying.code}:${price}`);
+    log.info('updatePrices', `${assetSelling.code}-${assetBuying.code}:${price.n}/${price.d}`);
 
-    this.pricesHash[assetSelling.code][assetBuying.code] = new Decimal(price);
+    this.pricesHash[assetSelling.code][assetBuying.code] = price;
 
   }
 
@@ -140,7 +88,7 @@ class Oracle {
 
     if(wallet.asset.isNative() ){
 
-      return '0';
+      return false;
 
     }
 
@@ -164,26 +112,9 @@ class Oracle {
 
   async updatePrices(){
 
-    const realWorldPricePromise = getRealWorldPrices()
+    return fixerCall()
       .then(realWorldPrice => realWorldPrice.map(price => this.setPrice({ code: price.selling }, { code: price.buying }, price.rate) ) )
       .catch(err => log.info('updatePriceRealWorld', err) );
-
-    const realWorldPriceBtcPromise = getBtc_RealWorldPrices()
-      .then(realWorldPrice => realWorldPrice.map(price => this.setPrice({ code: price.selling }, { code: price.buying }, price.rate) ) )
-      .catch(err => log.info('updatePriceRealWorldBtc', err) );
-
-    // const lxmBtcPricePromise = getLxmBtcPrice().then( (lxmBtcPrice) => {
-    //
-    //   prices.push(lxmBtcPrice); //TODO bind (lxm -> btc) - (btc -> usd & btc -> eur) => (lxm -> eur & lxm -> usd)
-    //
-    // }).catch(err => log.info('updatePriceLxmBtc', err) );
-
-
-    return Promise.all([
-      realWorldPricePromise,
-      realWorldPriceBtcPromise,
-      // lxmBtcPricePromise
-    ]);
 
   }
 

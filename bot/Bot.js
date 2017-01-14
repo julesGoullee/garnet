@@ -1,5 +1,4 @@
 const log = require('npmlog');
-const Decimal = require('decimal.js');
 const Stellar = require('stellar-sdk');
 const { HORIZON_ENDPOINT, BOT_CHECK_BALANCE_TIMER } = require('../config');
 const { sleep } = require('../modules/utils');
@@ -9,6 +8,7 @@ const { removePrevUpOffers, deleteOfferOperation, patchOffers, fetchOffers, filt
 const { submitTransaction } = require('../modules/transaction');
 const { loadAccountFromSeed } = require('../modules/account');
 const { assetUid } = require('../modules/asset');
+const BigNumber = require('bignumber.js');
 
 class Bot {
   constructor(seed, oracle){
@@ -84,7 +84,7 @@ class Bot {
 
     let operations = [];
     const lastOffers = filterOffers(actualOffers, wallet.asset, walletTrade.asset);
-    const bnActualBalance = new Decimal(wallet.balance);
+    const bnActualBalance = new BigNumber(wallet.balance);
     const price = await this.oracle.getPrice(wallet.asset, walletTrade.asset);
 
     if(bnActualBalance.isZero() || !price || wallet.asset.isNative() ){
@@ -94,26 +94,23 @@ class Bot {
     }
 
     const updateAmount = await this.oracle.getAmount(wallet);
-    const bnUpdateAmount = new Decimal(updateAmount);
-    const bnUpdatePrice = new Decimal(price);
+    const bnUpdateAmount = new BigNumber(updateAmount);
 
     if(lastOffers.length > 0){
 
       const lastOffer = lastOffers[0];
-
-      const bnActualOfferAmount = new Decimal(lastOffer.amount);
-      const bnActualOfferPrice = new Decimal(lastOffer.price);
+      const bnActualOfferAmount = new BigNumber(lastOffer.amount);
 
       operations = operations.concat(removePrevUpOffers(lastOffers) );
 
 
-      if(bnActualOfferAmount.equals(bnUpdateAmount) && bnActualOfferPrice.equals(bnUpdatePrice) ){
+      if(bnActualOfferAmount.equals(bnUpdateAmount) && lastOffer.price_r.n === price.n && lastOffer.price_r.d === price.d){
 
         // log.silly('price', `NothingChangeOffer|Selling:${assetUid(wallet.asset)}|Buying:${assetUid(lastOffer.buying.asset)}|Price:${price}|Balance:${wallet.balance}`); // eslint-disable-line max-len
 
       } else{
 
-        log.info('price', `UpdateOffer|Selling:${assetUid(wallet.asset)}|Buying:${assetUid(lastOffer.buying.asset)}|Price:${price}|Balance:${wallet.balance}|Amount:${updateAmount}`); // eslint-disable-line max-len
+        log.info('price', `UpdateOffer|Selling:${assetUid(wallet.asset)}|Buying:${assetUid(lastOffer.buying.asset)}|Price:${price.n}/${price.d}|Balance:${wallet.balance}|Amount:${updateAmount}`); // eslint-disable-line max-len
 
         operations.push(Stellar.Operation.manageOffer({
           selling: wallet.asset,
@@ -127,7 +124,7 @@ class Bot {
 
     } else{
 
-      log.info('price', `NewOffer|Selling:${assetUid(wallet.asset)}|Buying:${assetUid(walletTrade.asset)}|Price:${price.toString()}|Balance:${wallet.balance}|UpdateAmount:${bnUpdateAmount.toString()}`); // eslint-disable-line max-len
+      log.info('price', `NewOffer|Selling:${assetUid(wallet.asset)}|Buying:${assetUid(walletTrade.asset)}|Price:${price.n}/${price.d}|Balance:${wallet.balance}|UpdateAmount:${bnUpdateAmount.toString()}`); // eslint-disable-line max-len
 
       operations.push(Stellar.Operation.createPassiveOffer({
         selling: wallet.asset,
@@ -156,16 +153,11 @@ class Bot {
     const operationPromises = wallets.reduce( (accWallet, wallet) => {
 
       const walletsTrade = wallets.filter(otherWallet => otherWallet !== wallet);
-      const updateOrCreateOps = walletsTrade.reduce( (accWalletTrade, walletTrade) => {
-
-        return accWalletTrade.concat(this.operationsTradeWallet({
-          actualOffers,
-          wallet,
-          walletTrade
-        })
-        );
-
-      }, []);
+      const updateOrCreateOps = walletsTrade.reduce( (accWalletTrade, walletTrade) => accWalletTrade.concat(this.operationsTradeWallet({
+        actualOffers,
+        wallet,
+        walletTrade
+      }) ), []);
 
       return accWallet.concat(...updateOrCreateOps);
 

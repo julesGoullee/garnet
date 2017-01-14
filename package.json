@@ -22,11 +22,11 @@
   "license": "MIT",
   "dependencies": {
     "babel-eslint": "7.1.1",
+    "bignumber.js": "4.0.0",
     "bluebird": "3.4.7",
     "chai": "3.5.0",
     "chai-as-promised": "6.0.0",
     "chai-spies": "0.7.1",
-    "decimal.js": "7.1.0",
     "eslint": "3.10.2",
     "eslint-plugin-babel": "4.0.0",
     "eslint-plugin-no-async-without-await": "1.2.0",

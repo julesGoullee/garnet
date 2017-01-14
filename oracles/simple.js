@@ -6,7 +6,7 @@
  class Oracle {
    async getPrice(assetSelling, assetBuying){
 
-     return 1;
+     return { n: 1, d: 1};
   
    }
    async getAmount(wallet){

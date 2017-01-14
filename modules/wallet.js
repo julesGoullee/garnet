@@ -1,5 +1,5 @@
 const log = require('npmlog');
-const Decimal = require('decimal.js');
+const BigNumber = require('bignumber.js');
 const { assetUid } = require('../modules/asset');
 
 function showWallets(account){
@@ -12,7 +12,7 @@ function getUpWallets(wallets){
 
   return wallets.reduce( (acc, wallet) => {
 
-    const bnBalance = new Decimal(wallet.balance);
+    const bnBalance = new BigNumber(wallet.balance);
 
     if(bnBalance.isPositive() && !bnBalance.isZero() ){
 
