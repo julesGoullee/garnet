@@ -16,47 +16,29 @@ class Bot {
     this.seed = seed;
     this.oracle = oracle;
 
-    try{
-
-      this.keypair = Stellar.Keypair.fromSeed(this.seed);
-    
-    } catch(e){
-
-      log.error('bot', 'Invalid seed');
-      throw e;
-    
-    }
-
   }
 
   async run(){
 
+    const { account, pair } = await loadAccountFromSeed(this.seed);
+    const actualOffers = await fetchOffers(account);
+
+    patchOffers(actualOffers, this.account);
+    this.account = account;
+    this.pair = pair;
+    await Promise.all(actualOffers.map(deleteOfferOperation) );
     this.startTime = Date.now();
-
-    this.account = await loadAccountFromSeed(this.seed);
-
     let running = true;
 
     while(running){
 
-      try{
+      running = await this.makeOffers().catch(err => log.error('makeOffers', err) );
+      await sleep(BOT_CHECK_BALANCE_TIMER);
 
-        running = await this.makeOffers();
-        await sleep(BOT_CHECK_BALANCE_TIMER);
-
-      } catch(e){
-
-        console.error(e);
-        await sleep(BOT_CHECK_BALANCE_TIMER);
-
-        // running = false;
-      
-      }
-    
     }
 
     return true;
-  
+
   }
 
   async makeOffers(){
@@ -77,7 +59,7 @@ class Bot {
     }
 
     return true;
-  
+
   }
 
   async operationsTradeWallet({ actualOffers, wallet, walletTrade }){ // eslint-disable-line max-statements, complexity
@@ -171,7 +153,7 @@ class Bot {
     // flatten array
 
     return [].concat(...nestedArray);
-  
+
   }
 }
 

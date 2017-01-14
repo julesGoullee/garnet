@@ -6,15 +6,15 @@ const { assetInstance } = require('../modules/asset');
 
 async function loadAccountFromSeed(seed){
 
-  const botPair = Stellar.Keypair.fromSeed(seed);
-  const accountId = botPair.accountId();
-  const botAccount = await server.loadAccount(accountId);
+  const pair = Stellar.Keypair.fromSeed(seed);
+  const accountId = pair.accountId();
+  const account = await server.loadAccount(accountId);
 
   log.info('loadAccount', `BotAccountId:${accountId}`);
 
   return {
-    botPair,
-    botAccount
+    pair,
+    account
   };
 
 }
