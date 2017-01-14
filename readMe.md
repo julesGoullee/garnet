@@ -46,7 +46,6 @@ You can run your own bot and test its behavior on the testnet. You can use tools
 ### Requirements
 
 - NodeJS v7+
-- yarn *(optional)*
 ### Bash
  The easiest way to run the bot is from command line.
  

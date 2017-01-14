@@ -395,8 +395,6 @@ module.exports = {
 
     ////////// PLUGINS //////////
 
-    'no-async-without-await/no-async-without-await': 2,
-
     // Eslint-plugin-babel
     'babel/new-cap': 2,
     'babel/object-curly-spacing': [2, 'always', {  // require or disallow padding inside curly braces (fixable)
