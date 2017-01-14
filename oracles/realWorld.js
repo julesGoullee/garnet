@@ -1,9 +1,8 @@
-/* eslint-disable class-methods-use-this */
-/* eslint-disable no-async-without-await/no-async-without-await */
-/* eslint-disable no-unused-vars */
 require('../config/globalConfig');
+
 const log = require('npmlog');
 const rp = require('request-promise');
+const { ORACLE_CHECK_PRICE_TIMER } = require('../config');
 const { parseAsync, sleep, priceToNumber } = require('../modules/utils');
 const assetCodes = ['EUR', 'USD', 'JPY'];
 const base = 'USD';
@@ -104,7 +103,7 @@ class Oracle {
 
       await this.updatePrices().catch(err => log.error('updatePrices', err) );
 
-      await sleep(5000);
+      await sleep(ORACLE_CHECK_PRICE_TIMER);
 
     }
 

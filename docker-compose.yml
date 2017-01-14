@@ -4,4 +4,6 @@ bot:
         - ./data:/app/data
   environment:
     SEED: SB2HDCHBPK3EBSQDIKVSMQBTQFNFDQAYAOIHNMQHBA5DEJXPN5W6WUYK
+    BOT_CHECK_BALANCE_TIMER: 3600
+    ORACLE_CHECK_PRICE_TIMER: 1800
   command: npm run bot
