@@ -11,8 +11,7 @@
     "test": "mocha --harmony-async-await --trace-warnings -R spec ./test/test.config.js ./test/spec/*.js --timeout 5000",
     "lint": "eslint .",
     "travis": "npm run lint && npm run test",
-    "bot-run": "node --harmony-async-await --trace-warnings bot/run",
-    "pac-run": "node --harmony-async-await --trace-warnings pac/runner",
+    "bot": "node --harmony-async-await --trace-warnings bot",
     "gen-accounts": "node --harmony-async-await --trace-warnings genAccounts"
   },
   "repository": {
@@ -29,7 +28,6 @@
     "chai-spies": "0.7.1",
     "eslint": "3.10.2",
     "eslint-plugin-babel": "4.0.0",
-    "eslint-plugin-no-async-without-await": "1.2.0",
     "jsonfile": "2.4.0",
     "mocha": "3.2.0",
     "mock-require": "2.0.1",

@@ -35,7 +35,7 @@ module.exports = {
     'fetch': true
   },
 
-  'plugins': ['babel', 'no-async-without-await'],
+  'plugins': ['babel'],
 
   'rules': {                                      // http://eslint.org/docs/rules/
 

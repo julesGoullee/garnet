@@ -3,6 +3,7 @@ FROM debian:jessie
 # Install dependencies for nodejs
 RUN apt-get update && apt-get install -y \
     build-essential \
+    ca-certificates \
     make \
     gcc \
 	curl

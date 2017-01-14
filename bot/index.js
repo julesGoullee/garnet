@@ -2,14 +2,11 @@ require('./../config/globalConfig');
 
 const Oracle = require('../oracles/realWorld');
 const Bot = require('./Bot');
-
-const dataAccounts = require('../data/accounts.json');
-
-const seed = process.env.SEED || dataAccounts.bot.seed;
+const { SEED } = require('../config');
 const oracle = new Oracle();
 
 oracle.update();
 
-const bot = new Bot(seed, oracle);
+const bot = new Bot(SEED, oracle);
 
 bot.run();

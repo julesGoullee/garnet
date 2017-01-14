@@ -1,0 +1,7 @@
+bot:
+  build: ./
+  volumes:
+        - ./data:/app/data
+  environment:
+    SEED: SB2HDCHBPK3EBSQDIKVSMQBTQFNFDQAYAOIHNMQHBA5DEJXPN5W6WUYK
+  command: npm run bot
