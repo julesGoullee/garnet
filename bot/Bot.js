@@ -23,9 +23,11 @@ class Bot {
     const { account, pair } = await loadAccountFromSeed(this.seed);
     const actualOffers = await fetchOffers(account);
 
-    patchOffers(actualOffers, this.account);
+    patchOffers(actualOffers, account);
+
     this.account = account;
-    this.pair = pair;
+    this.keypair = pair;
+
     await Promise.all(actualOffers.map(deleteOfferOperation) );
     this.startTime = Date.now();
     let running = true;

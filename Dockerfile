@@ -18,7 +18,7 @@ RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-
 ENV NODE_ENV production
 
 WORKDIR /app/
+RUN npm install -g yarn
 COPY package.json /app
-RUN npm install
-
+RUN yarn
 COPY . /app
