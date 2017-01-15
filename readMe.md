@@ -4,7 +4,6 @@
 [![NPM Version][npm-image]][npm-url]
 [![Linux Build][travis-image]][travis-url]
 [![dependencies Status][david-image]][david-url]
-[![Test Coverage][codecov-image]][codecov-url]
 
 **Garnet** is a market-maker bot for the [Stellar network](https://www.stellar.org). It automatically creates *offers* on the market depending on its wallets and on market prices.
 
@@ -112,9 +111,7 @@ If you have something interesting to share with us, we're open to issues or PM.
 
 [npm-image]: https://img.shields.io/npm/v/garnet-marker-maker.svg
 [npm-url]: https://npmjs.org/package/garnet-marker-maker.svg
-[travis-image]: https://img.shields.io/travis/julesGoullee/garnet/master.svg?label=linux
+[travis-image]: https://api.travis-ci.org/julesGoullee/garnet.svg
 [travis-url]: https://travis-ci.org/julesGoullee/garnet
 [david-image]: https://david-dm.org/julesGoullee/garnet.svg
 [david-url]: https://david-dm.org/julesGoullee/garnet#info=dependencies&view=table
-[codecov-image]: https://img.shields.io/codecov/c/github/julesGoullee/garnet.svg
-[codecov-url]: https://codecov.io/gh/julesGoullee/garnet?branch=master
