@@ -1,0 +1,12 @@
+.git*
+.travis.yml
+.DS_Store
+.nvmrc
+.editconfig
+.eslintrc.js
+.dockerignore
+.eslintignore
+Dockerfile
+docker-compose.yml
+data/
+test/

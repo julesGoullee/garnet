@@ -3,25 +3,25 @@
 /* eslint-disable no-unused-vars */
 
 
- class Oracle {
-   async getPrice(assetSelling, assetBuying){
+class Oracle {
+  async getPrice(assetSelling, assetBuying){
 
-     return {
-       n: 1, d: 1
-     };
-  
-   }
-   async getAmount(wallet){
+    return {
+      n: 1, d: 1
+    };
 
-     if(wallet.asset.isNative() ){
+  }
+  async getAmount(wallet){
 
-       return 0;
-    
-     }
-    
-     return wallet.balance;
-  
-   }
+    if(wallet.asset.isNative() ){
+
+      return 0;
+
+    }
+
+    return wallet.balance;
+
+  }
 }
 
- module.exports = Oracle;
+module.exports = Oracle;

@@ -1,11 +1,20 @@
 {
-  "name": "garnet",
+  "name": "garnet-marker-maker",
   "version": "0.0.1",
-  "description": "des",
-  "main": "bot/index.js",
+  "description": "Automatic market maker on Stellar Network",
+  "keywords": [
+    "stellar",
+    "garnet",
+    "trade",
+    "market",
+    "maker",
+    "bot"
+  ],
+  "homepage": "https://github.com/julesGoullee/garnet",
+  "main": "bot/Bot.js",
   "engines": {
-    "node": "7.4.0",
-    "npm": "4.0.5"
+    "node": ">=7.4.0",
+    "npm": ">=4.0.5"
   },
   "scripts": {
     "test": "mocha --harmony-async-await --trace-warnings -R spec ./test/test.config.js ./test/spec/*.js --timeout 5000",
@@ -15,9 +24,13 @@
     "gen-accounts": "node --harmony-async-await --trace-warnings genAccounts"
   },
   "repository": {
-    "type": "git"
+    "type": "git",
+    "url": "https://github.com/julesGoullee/garnet"
   },
-  "author": "Jules Goullée",
+  "author":  {
+    "name": "Jules Goullée",
+    "email": "julesgoullee@gmail.com"
+  },
   "license": "MIT",
   "dependencies": {
     "babel-eslint": "7.1.1",
@@ -32,7 +45,6 @@
     "mocha": "3.2.0",
     "mock-require": "2.0.1",
     "npmlog": "4.0.2",
-    "redis": "2.6.4",
     "request": "2.79.0",
     "request-promise": "4.1.1",
     "stellar-sdk": "0.6.2",
