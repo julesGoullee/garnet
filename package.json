@@ -1,6 +1,6 @@
 {
   "name": "garnet-marker-maker",
-  "version": "0.0.1",
+  "version": "0.0.11",
   "description": "Automatic market maker on Stellar Network",
   "keywords": [
     "stellar",
