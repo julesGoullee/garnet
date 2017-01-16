@@ -71,7 +71,7 @@ $ npm install stellar-bot
 ```
 
 ``` javascript
-const Bot = require('stellar-bot');
+const Bot = require('garnet-market-maker');
 
 class Oracle {
   async getPrice(assetSelling, assetBuying){ // For example 1:1 price
@@ -109,8 +109,8 @@ The plan is to increase robustness and precision of market prices and external o
 
 If you have something interesting to share with us, we're open to issues or PM.
 
-[npm-image]: https://img.shields.io/npm/v/garnet-marker-maker.svg
-[npm-url]: https://npmjs.org/package/garnet-marker-maker.svg
+[npm-image]: https://img.shields.io/npm/v/garnet-market-maker.svg
+[npm-url]: https://npmjs.org/package/garnet-market-maker.svg
 [travis-image]: https://api.travis-ci.org/julesGoullee/garnet.svg
 [travis-url]: https://travis-ci.org/julesGoullee/garnet
 [david-image]: https://david-dm.org/julesGoullee/garnet.svg
