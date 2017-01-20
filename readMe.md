@@ -67,7 +67,7 @@ You can implement your own oracle. This is an example of a bot instance with a s
 You Oracle just have to implement two methods `getPrice` and `getAmount`. Please notice that they must return promises, and are implemented as async functions here.
 Assets are instance of StellarSDK's `Asset` class.
 ``` bash
-$ npm install stellar-bot
+$ npm install garnet-market-maker
 ```
 
 ``` javascript
