@@ -71,16 +71,19 @@ $ npm install garnet-market-maker
 ```
 
 ``` javascript
-const Bot = require('garnet-market-maker');
+const Bot = require('garnet-market-maker').Bot;
 
 class Oracle {
+
   async getPrice(assetSelling, assetBuying){ // For example 1:1 price
 
     return {
-      n: 1, d: 1
+      n: 1,
+      d: 1
     };
 
   }
+  
   async getAmount(wallet){ // For example bid all ressource
 
     if(wallet.asset.isNative() ){
@@ -92,14 +95,15 @@ class Oracle {
     return wallet.balance;
 
   }
+  
 }
 
 const SEED = 'yourSeed';
 const oracle = new Oracle();
-
 const bot = new Bot(SEED, oracle);
 
 bot.run();
+
 ```
 ## Improvements
 

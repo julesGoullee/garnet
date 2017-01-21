@@ -1,6 +1,6 @@
 {
   "name": "garnet-market-maker",
-  "version": "0.0.11",
+  "version": "0.0.13",
   "description": "Automatic market maker on Stellar Network",
   "keywords": [
     "stellar",
@@ -11,7 +11,7 @@
     "bot"
   ],
   "homepage": "https://github.com/julesGoullee/garnet",
-  "main": "bot/Bot.js",
+  "main": "main.js",
   "engines": {
     "node": ">=7.4.0",
     "npm": ">=4.0.5"
@@ -20,7 +20,7 @@
     "test": "mocha --harmony-async-await --trace-warnings -R spec ./test/test.config.js ./test/spec/*.js --timeout 5000",
     "lint": "eslint .",
     "travis": "npm run lint && npm run test",
-    "bot": "node --harmony-async-await --trace-warnings bot",
+    "bot": "node --harmony-async-await --trace-warnings bot/run.js",
     "gen-accounts": "node --harmony-async-await --trace-warnings genAccounts"
   },
   "repository": {
@@ -45,7 +45,7 @@
     "mocha": "3.2.0",
     "mock-require": "2.0.1",
     "npmlog": "4.0.2",
-    "redis": "^2.6.5",
+    "redis": "2.6.5",
     "request": "2.79.0",
     "request-promise": "4.1.1",
     "stellar-sdk": "0.6.2",
